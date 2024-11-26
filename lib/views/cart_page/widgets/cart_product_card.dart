@@ -52,7 +52,8 @@ class CartProductCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    placeholder: (context, url) => const CircularProgressIndicator(
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(
                       color: Colors.white,
                     ),
                     errorWidget: (context, url, error) =>
@@ -85,46 +86,88 @@ class CartProductCard extends StatelessWidget {
                               billController.editCart
                                   ? GetBuilder<CartController>(
                                       builder: (controller) {
-                                      return Container(
-                                        height: 40,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(16)),
-                                        clipBehavior: Clip.hardEdge,
-                                        width: 80,
-                                        child: TextFormField(
-                                          onChanged: (value) {
-                                            if (value.isNum) {
+                                      return Row(
+                                        children: [
+                                          IconButton(
+                                            onPressed: () {
+                                              num currentQuantity =
+                                                  model.quantity;
+                                              if (currentQuantity > 1) {
+                                                controller.cartOrderProducts[
+                                                        index]['quantity'] =
+                                                    (currentQuantity - 1)
+                                                        .toString();
+                                                model.quantity--;
+                                                billController.getSubTotal();
+                                                controller.update();
+                                              }
+                                            },
+                                            icon: const Icon(Icons.remove,
+                                                color: Constans.kMainColor),
+                                          ),
+                                          Text(
+                                            model.quantity.toString(),
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              num currentQuantity =
+                                                  model.quantity;
                                               controller.cartOrderProducts[
                                                       index]['quantity'] =
-                                                  value.toString();
+                                                  (currentQuantity + 1)
+                                                      .toString();
+                                              model.quantity++;
                                               billController.getSubTotal();
-                                            } else {
-                                              controller
-                                                      .cartOrderProducts[index]
-                                                  ['quantity'] = "1";
-                                            }
-                                          },
-                                          onEditingComplete: () {
-                                            debugPrint('Ammis');
-                                          },
-                                          textAlign: TextAlign.center,
-                                          textAlignVertical:
-                                              TextAlignVertical.center,
-                                          initialValue:
-                                              model.quantity.toString(),
-                                          keyboardType:
-                                              const TextInputType.numberWithOptions(
-                                                  signed: false),
-                                          cursorColor: Constans.kMainColor,
-                                          decoration: const InputDecoration(
-                                              contentPadding:
-                                                  EdgeInsets.only(bottom: 10),
-                                              fillColor: Color(0xFFF1F7F4),
-                                              filled: true,
-                                              border: InputBorder.none),
-                                        ),
+                                              controller.update();
+                                            },
+                                            icon: const Icon(Icons.add,
+                                                color: Constans.kMainColor),
+                                          ),
+                                        ],
                                       );
+                                      // return Container(
+                                      //   height: 40,
+                                      //   decoration: BoxDecoration(
+                                      //       borderRadius:
+                                      //           BorderRadius.circular(16)),
+                                      //   clipBehavior: Clip.hardEdge,
+                                      //   width: 80,
+                                      //   child: TextFormField(
+                                      //     onChanged: (value) {
+                                      //       if (value.isNum) {
+                                      //         controller.cartOrderProducts[
+                                      //                 index]['quantity'] =
+                                      //             value.toString();
+                                      //         billController.getSubTotal();
+                                      //       } else {
+                                      //         controller
+                                      //                 .cartOrderProducts[index]
+                                      //             ['quantity'] = "1";
+                                      //       }
+                                      //     },
+                                      //     onEditingComplete: () {
+                                      //       debugPrint('Ammis');
+                                      //     },
+                                      //     textAlign: TextAlign.center,
+                                      //     textAlignVertical:
+                                      //         TextAlignVertical.center,
+                                      //     initialValue:
+                                      //         model.quantity.toString(),
+                                      //     keyboardType:
+                                      //         const TextInputType.numberWithOptions(
+                                      //             signed: false),
+                                      //     cursorColor: Constans.kMainColor,
+                                      //     decoration: const InputDecoration(
+                                      //         contentPadding:
+                                      //             EdgeInsets.only(bottom: 10),
+                                      //         fillColor: Color(0xFFF1F7F4),
+                                      //         filled: true,
+                                      //         border: InputBorder.none),
+                                      //   ),
+                                      // );
                                     })
                                   : Text(model.quantity.toString()),
                             ],

@@ -15,19 +15,19 @@ class ProductListView extends StatefulWidget {
 }
 
 class _ProductListViewState extends State<ProductListView> {
-  final controller = Get.put(CartController(), permanent: true);
+  final cartcontroller = Get.put(CartController(), permanent: true);
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await controller.getCartProducts(context);
+      await cartcontroller.getCartProducts(context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<CartController>(builder: (controller) {
-      return controller.cartLoadingError && !controller.cartLoading
+    return GetBuilder<CartController>(builder: (cartController) {
+      return cartController.cartLoadingError && !cartController.cartLoading
           ? Center(
               child: Center(
                 child: Text(
@@ -36,7 +36,7 @@ class _ProductListViewState extends State<ProductListView> {
                 ),
               ),
             )
-          : controller.cartProducts.isEmpty && !controller.cartLoading
+          : cartController.cartProducts.isEmpty && !cartController.cartLoading
               ? Center(
                   child: Text(
                     'لا يوجد اي منتجات ضمن السلة ',
@@ -44,11 +44,11 @@ class _ProductListViewState extends State<ProductListView> {
                   ),
                 )
               : ListView.builder(
-                  itemCount: controller.cartLoading
+                  itemCount: cartController.cartLoading
                       ? 4
-                      : controller.cartProducts.length,
+                      : cartController.cartProducts.length,
                   itemBuilder: (context, index) {
-                    return controller.cartLoading
+                    return cartController.cartLoading
                         ? ShimmerContainer(
                             width: MediaQuery.sizeOf(context).height,
                             height: 130,
@@ -56,7 +56,7 @@ class _ProductListViewState extends State<ProductListView> {
                             margin: const EdgeInsets.all(8),
                           )
                         : CartProductCard(
-                            model: controller.cartProducts[index],
+                            model: cartController.cartProducts[index],
                             index: index,
                           );
                   });

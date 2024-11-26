@@ -24,23 +24,27 @@ class CartPage extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.sizeOf(context).height - 80,
-            child: Column(
-              children: [
-                const Expanded(
-                  flex: 3,
-                  // height: MediaQuery.sizeOf(context).height / 3 * 2 - 40,
-                  child: ProductListView(),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                BillInfoSection(),
-              ],
-            ),
-          ),
+        body: GetBuilder<CartController>(
+          builder: (controller) {
+            return Container(
+              height: MediaQuery.sizeOf(context).height - 80,
+              child: Column(
+                children: [
+                  controller.cartOrderProducts.isNotEmpty
+                      ? BillInfoSection()
+                      : SizedBox(),
+                  Expanded(
+                    flex: 3,
+                    // height: MediaQuery.sizeOf(context).height / 3 * 2 - 40,
+                    child: ProductListView(),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );

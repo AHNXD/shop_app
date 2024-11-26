@@ -1,9 +1,8 @@
-
 class CartProductModel {
   final num id;
   final String name;
   final num price;
-  final num quantity;
+  num quantity;
   final String image;
   final String category;
   final num companyId;
