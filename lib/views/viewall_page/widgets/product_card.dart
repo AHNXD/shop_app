@@ -40,8 +40,8 @@ class ProductCard extends StatelessWidget {
                             color: Colors.white,
                             width: 64,
                             height: 64,
-                            imageUrl:
-                                "${Constans.kImageBaseUrl}${model.images![index]}",
+                            imageUrl: "",
+                            //"${Constans.kImageBaseUrl}${model.images![index]}",
                             imageBuilder: (context, imageProvider) => Container(
                               decoration: BoxDecoration(
                                 image: DecorationImage(
@@ -57,29 +57,29 @@ class ProductCard extends StatelessWidget {
                             errorWidget: (context, url, error) => const Icon(
                                 Icons.wifi_tethering_error_rounded_sharp),
                           ),
-                          itemCount: model.images!.length,
+                          itemCount: 1, //model.images!.length,
                         ),
                         Positioned.fill(
                           top: 4,
                           child: Align(
-                            alignment: Alignment.topCenter,
-                            child: SmoothPageIndicator(
-                                effect: CustomizableEffect(
-                                    dotDecoration: DotDecoration(
-                                        color: Colors.grey.withOpacity(.2),
-                                        width: 12,
-                                        height: 12,
-                                        borderRadius:
-                                            BorderRadius.circular(999)),
-                                    activeDotDecoration: DotDecoration(
-                                        color: Constans.kMainColor,
-                                        width: 12,
-                                        height: 12,
-                                        borderRadius:
-                                            BorderRadius.circular(999))),
-                                controller: pageController,
-                                count: model.images!.length),
-                          ),
+                              alignment: Alignment.topCenter,
+                              child: SmoothPageIndicator(
+                                  effect: CustomizableEffect(
+                                      dotDecoration: DotDecoration(
+                                          color: Colors.grey.withOpacity(.2),
+                                          width: 12,
+                                          height: 12,
+                                          borderRadius:
+                                              BorderRadius.circular(999)),
+                                      activeDotDecoration: DotDecoration(
+                                          color: Constans.kMainColor,
+                                          width: 12,
+                                          height: 12,
+                                          borderRadius:
+                                              BorderRadius.circular(999))),
+                                  controller: pageController,
+                                  count: 1) //model.images!.length),
+                              ),
                         )
                       ],
                     )),

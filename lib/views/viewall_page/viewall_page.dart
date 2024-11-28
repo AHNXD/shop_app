@@ -9,9 +9,13 @@ class ViewAllPage extends StatelessWidget {
   ViewAllPage({
     super.key,
     required this.title,
+    this.categoryId,
+    this.companyId,
   });
   final controller = Get.put(ProductsController());
   final String title;
+  final int? categoryId;
+  final int? companyId;
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ProductsController>(builder: (controller) {
@@ -44,7 +48,10 @@ class ViewAllPage extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
-                      const CustomSearchBar(),
+                      CustomSearchBar(
+                        categoryId: categoryId,
+                        companyId: companyId,
+                      ),
                       controller.productsLoading
                           ? Expanded(
                               child: Center(

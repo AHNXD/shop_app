@@ -89,6 +89,8 @@ class AuthController extends GetxController {
   String locationDetails = '';
   String longitude = '';
   String latitude = '';
+  String startTime = "";
+  String endTime = "";
   Future registerUser(context) async {
     try {
       if (addressId == '') {
@@ -105,7 +107,9 @@ class AuthController extends GetxController {
         'address_id': addressId,
         'location_details': locationDetails,
         'longitude': longitude,
-        'latitude': latitude
+        'latitude': latitude,
+        'start_time': startTime,
+        'end_time': endTime
       });
       request.headers.addAll(headers);
       http.StreamedResponse response = await request.send();
@@ -149,7 +153,7 @@ class AuthController extends GetxController {
       request.fields.addAll({
         'contact': phoneNumber,
         'password': password,
-        'device_token': userInfo.getString('fcm_token')!
+        //'device_token': userInfo.getString('fcm_token')!
       });
 
       request.headers.addAll(headers);
@@ -210,7 +214,7 @@ class AuthController extends GetxController {
               'حدث خطأ',
               data['message']['contact'][0],
             ).show(context);
-          }  else {
+          } else {
             showErrorSnackBar(
               'حدث خطأ',
               'حاول مرة اخرى',

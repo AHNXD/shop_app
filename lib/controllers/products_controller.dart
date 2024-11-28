@@ -15,11 +15,21 @@ class ProductsController extends GetxController {
   bool hasMoreData = true;
   List productsList = [];
   int? selectedCategory;
+  int? companyId;
   int pageNumberr = 1;
   String searchText = '';
   bool productsLoading = false;
   bool productsError = false;
   Future getAllProducts() async {
+    String url = "";
+    if (companyId != null) {
+      url =
+          "${Constans.kBaseUrl}products?category_id=$selectedCategory&company_id=$companyId&page=$pageNumberr&s=$searchText";
+    } else {
+      url =
+          "${Constans.kBaseUrl}products?category_id=$selectedCategory&page=$pageNumberr&s=$searchText";
+    }
+
     productsError = false;
     try {
       if (pageNumberr == 1) {
@@ -27,16 +37,13 @@ class ProductsController extends GetxController {
         productsList.clear();
         update();
       }
-      final response = await http.get(
-          Uri.parse(
-              '${Constans.kBaseUrl}products?category_id=${selectedCategory.toString()}&page=$pageNumberr&s=$searchText'),
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Bearer ${userInfo.getString('token')}'
-          });
+      final response = await http.get(Uri.parse(url), headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${userInfo.getString('token')}'
+      });
       log('page $pageNumberr');
       var data = jsonDecode(response.body);
-      log('${Constans.kBaseUrl}products?category_id=${controller.selectedCategoryId.toInt().toString()}&page=$pageNumberr&s=$searchText');
+      log(url);
       log('products: ${data['data']}');
       if (pageNumberr == 1) {
         productsLoading = false;
@@ -69,6 +76,12 @@ class ProductsController extends GetxController {
       // update();
       scrollController.addListener(_scrollListener);
     });
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    log("CompaniesController deleted");
   }
 
   bool isLoadingMoreData = false;
