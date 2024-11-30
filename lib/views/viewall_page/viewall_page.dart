@@ -36,59 +36,96 @@ class ViewAllPage extends StatelessWidget {
             centerTitle: true,
           ),
           body: GetBuilder<ProductsController>(builder: (controller) {
-            return controller.productsError
-                ? Center(
-                    child: Text(
-                      "حدث خطأ اعد المحاولة لاحقا",
-                      style: TextStyle(fontFamily: Constans.kFontFamily),
-                    ),
-                  )
-                : Column(
-                    children: [
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      CustomSearchBar(
-                        categoryId: categoryId,
-                        companyId: companyId,
-                      ),
-                      controller.productsLoading
-                          ? Expanded(
-                              child: Center(
-                                  child: CircularProgressIndicator(
-                                color: Constans.kMainColor,
-                              )),
-                            )
-                          : Expanded(
-                              child: ProductGridView(),
-                            ),
-                      controller.hasMoreData || controller.productsLoading
-                          ? Container()
-                          : controller.productsList.isEmpty
-                              ? Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                                  child: const Center(
-                                    child: Text(
-                                      "لا يوجد منتجات لعرضها ",
-                                      style: TextStyle(
-                                          fontFamily: Constans.kFontFamily),
-                                    ),
-                                  ),
-                                )
-                              : Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                                  child: const Center(
-                                    child: Text(
-                                      'لقد تصفحت جميع المنتجات ولا يوجد منتجات اضافية لعرضها',
-                                      style: TextStyle(
-                                          fontFamily: Constans.kFontFamily),
-                                    ),
-                                  ),
-                                )
-                    ],
-                  );
+            if (controller.productsError) {
+              return Center(
+                child: Text(
+                  "حدث خطأ اعد المحاولة لاحقا",
+                  style: TextStyle(fontFamily: Constans.kFontFamily),
+                ),
+              );
+            }
+            if (controller.productsLoading) {
+              return Center(
+                  child: CircularProgressIndicator(
+                color: Constans.kMainColor,
+              ));
+            }
+            if (controller.productsList.isEmpty) {
+              return Center(
+                child: Text(
+                  "لا يوجد منتجات لعرضها ",
+                  style: TextStyle(fontFamily: Constans.kFontFamily),
+                ),
+              );
+            }
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                CustomSearchBar(
+                  categoryId: categoryId,
+                  companyId: companyId,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Expanded(
+                  child: ProductGridView(),
+                ),
+              ],
+            );
+            // return controller.productsError
+            //     ? Center(
+            //         child: Text(
+            //           "حدث خطأ اعد المحاولة لاحقا",
+            //           style: TextStyle(fontFamily: Constans.kFontFamily),
+            //         ),
+            //       )
+            //     : Column(
+            //         children: [
+            //           const SizedBox(
+            //             height: 20,
+            //           ),
+            //           CustomSearchBar(
+            //             categoryId: categoryId,
+            //             companyId: companyId,
+            //           ),
+            //           controller.productsLoading
+            //               ? Center(
+            //                   child: CircularProgressIndicator(
+            //                   color: Constans.kMainColor,
+            //                 ))
+            //               : Expanded(
+            //                   child: ProductGridView(),
+            //                 ),
+            //           controller.hasMoreData || controller.productsLoading
+            //               ? Container()
+            //               : controller.productsList.isEmpty
+            //                   ? Container(
+            //                       padding:
+            //                           const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            //                       child: const Center(
+            //                         child: Text(
+            //                           "لا يوجد منتجات لعرضها ",
+            //                           style: TextStyle(
+            //                               fontFamily: Constans.kFontFamily),
+            //                         ),
+            //                       ),
+            //                     )
+            //                   : Container(
+            //                       padding:
+            //                           const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            //                       child: const Center(
+            //                         child: Text(
+            //                           'لقد تصفحت جميع المنتجات ولا يوجد منتجات اضافية لعرضها',
+            //                           style: TextStyle(
+            //                               fontFamily: Constans.kFontFamily),
+            //                         ),
+            //                       ),
+            //                     )
+            //         ],
+            //       );
           }),
         ),
       );

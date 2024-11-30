@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shop_app/constans.dart';
 import 'package:shop_app/controllers/home_page_controller.dart';
 import 'package:shop_app/controllers/shop_controller.dart';
 import 'package:shop_app/views/all_companies_page/all_companies_page.dart';
@@ -92,6 +93,7 @@ class HomePageBody extends StatelessWidget {
                                   child: Text(
                                     "عرض جميع الشركات",
                                     style: TextStyle(
+                                        color: Constans.kMainColor,
                                         fontSize: 15,
                                         fontFamily: 'Cairo',
                                         fontWeight: FontWeight.bold),
