@@ -180,9 +180,11 @@ class _OrderCardState extends State<OrderCard> {
                               });
                               var data = widget.isArchived
                                   ? await controller.showArchiveOrder(
-                                      widget.model.id.toString(), context)
+                                      widget.model.orderNumber.toString(),
+                                      context)
                                   : await controller.showOrder(
-                                      widget.model.id.toString(), context);
+                                      widget.model.orderNumber.toString(),
+                                      context);
                               setState(() {
                                 isLoading = false;
                               });
