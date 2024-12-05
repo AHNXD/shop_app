@@ -54,6 +54,7 @@ class CoustmTimePickerTextField extends StatelessWidget {
           },
         );
         if (pickedTime != null) {
+          // ignore: use_build_context_synchronously
           timeController.text = pickedTime.format(context);
         }
       },
