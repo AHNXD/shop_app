@@ -80,9 +80,7 @@ class HomePageBody extends StatelessWidget {
                                     fontWeight: FontWeight.bold),
                               ),
                             ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                            ),
+                            Spacer(),
                             Expanded(
                               child: Padding(
                                 padding: EdgeInsets.all(12.0),

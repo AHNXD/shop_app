@@ -7,18 +7,17 @@ import 'package:shop_app/main.dart';
 import 'package:shop_app/services/notification.dart';
 
 Future<void> initApp() async {
-   WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-    // FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  // FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   userInfo = await SharedPreferences.getInstance();
   debugPrint('token ${userInfo.getString('token')} ');
-    FirebaseMessaging.instance.getToken().then(((value) {
+  FirebaseMessaging.instance.getAPNSToken().then(((value) {
     debugPrint(value.toString());
     userInfo.setString('fcm_token', value.toString());
   }));
-    listenToNotification();
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  listenToNotifications();
 }

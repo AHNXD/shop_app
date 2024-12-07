@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -19,12 +20,14 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initApp();
   HttpOverrides.global = MyHttpOverrides();
+
   log("first use : ${userInfo.getBool('first_use')}");
-  
+
   runApp(
     const MyApp(),
   );
