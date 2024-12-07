@@ -1,17 +1,75 @@
+// import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:flutter/material.dart';
+
+// void listenToNotifications() {
+//   // Foreground messages
+//   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+//     debugPrint('Got a message whilst in the foreground!');
+//     debugPrint('Message data: ${message.data}');
+
+//     if (message.notification != null) {
+//       debugPrint(
+//           'Message also contained a notification: ${message.notification}');
+//       debugPrint(
+//           '${message.notification!.title} ${message.notification!.body}');
+//     }
+//   });
+
+//   // Background messages
+//   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+//   // Messages when the app is opened from a notification
+//   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+//     debugPrint('A new message appeared! ${message.messageId} ${message.data}');
+//   });
+// }
+
+// @pragma('vm:entry-point')
+// Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   debugPrint("Handling a background message: ${message.messageId}");
+// }
+
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  'high_importance_channel', // id
+  'High Importance Notifications', // title
+  description:
+      'This channel is used for important notifications.', // description
+  importance: Importance.high,
+);
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 void listenToNotifications() {
+  // Request iOS permissions
+  FirebaseMessaging.instance.requestPermission();
+
   // Foreground messages
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    debugPrint('Got a message whilst in the foreground!');
-    debugPrint('Message data: ${message.data}');
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
 
-    if (message.notification != null) {
-      debugPrint(
-          'Message also contained a notification: ${message.notification}');
-      debugPrint(
-          '${message.notification!.title} ${message.notification!.body}');
+    if (notification != null && android != null) {
+      flutterLocalNotificationsPlugin.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+            channelDescription: channel.description,
+            icon: 'launch_background',
+          ),
+        ),
+      );
     }
   });
 
@@ -20,11 +78,69 @@ void listenToNotifications() {
 
   // Messages when the app is opened from a notification
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    debugPrint('A new message appeared! ${message.messageId} ${message.data}');
+    // Handle messages when the app is opened from a notification
+    // For example, navigate to a specific screen
   });
 }
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  debugPrint("Handling a background message: ${message.messageId}");
+  // Handle background messages
+  RemoteNotification? notification = message.notification;
+  AndroidNotification? android = message.notification?.android;
+
+  if (notification != null && android != null) {
+    await flutterLocalNotificationsPlugin.show(
+      notification.hashCode,
+      notification.title,
+      notification.body,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          channel.id,
+          channel.name,
+          channelDescription: channel.description,
+          icon: 'launch_background',
+        ),
+      ),
+    );
+  }
+}
+
+Future<void> _requestAndroidPermissions() async {
+  try {
+    // Request notification permissions
+    await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    // Check for missing required permissions
+    if (Platform.isAndroid) {
+      await _checkRequiredAndroidPermissions();
+    }
+  } on PlatformException catch (e) {
+    print('Failed to request permissions: ${e.code} ${e.message}');
+  }
+}
+
+Future<void> _checkRequiredAndroidPermissions() async {
+  // Check for missing required permissions
+  if (!await _hasNecessaryPermissions()) {
+    // Request missing permissions
+    if (!await _hasNecessaryPermissions()) {
+      // Request missing permissions
+      await Permission.notification.request();
+    }
+  }
+}
+
+Future<bool> _hasNecessaryPermissions() async {
+  // Check if notification permission is granted
+  PermissionStatus notificationStatus = await Permission.notification.status;
+  return notificationStatus.isGranted;
 }
