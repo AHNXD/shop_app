@@ -35,6 +35,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shop_app/helper/custom_snack_bar.dart';
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
   'high_importance_channel', // id
@@ -57,19 +58,21 @@ void listenToNotifications() {
     AndroidNotification? android = message.notification?.android;
 
     if (notification != null && android != null) {
-      flutterLocalNotificationsPlugin.show(
-        notification.hashCode,
-        notification.title,
-        notification.body,
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            channel.id,
-            channel.name,
-            channelDescription: channel.description,
-            icon: 'launch_background',
-          ),
-        ),
-      );
+          showInfoSnackBar(message.notification?.title, message.notification?.body);
+      // flutterLocalNotificationsPlugin.show(
+      //   notification.hashCode,
+      //   notification.title,
+      //   notification.body,
+      //   NotificationDetails(
+      //     iOS: DarwinNotificationDetails(),
+      //     android: AndroidNotificationDetails(
+      //       channel.id,
+      //       channel.name,
+      //       channelDescription: channel.description,
+      //       icon: '@mipmap/ic_launcher',
+      //     ),
+      //   ),
+      // );
     }
   });
 
@@ -78,8 +81,7 @@ void listenToNotifications() {
 
   // Messages when the app is opened from a notification
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    // Handle messages when the app is opened from a notification
-    // For example, navigate to a specific screen
+    showInfoSnackBar(message.notification?.title, message.notification?.body);
   });
 }
 
@@ -95,6 +97,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       notification.title,
       notification.body,
       NotificationDetails(
+        iOS: DarwinNotificationDetails(),
         android: AndroidNotificationDetails(
           channel.id,
           channel.name,
@@ -106,7 +109,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   }
 }
 
-Future<void> _requestAndroidPermissions() async {
+Future<void> _requestNotifPermissions() async {
   try {
     // Request notification permissions
     await FirebaseMessaging.instance.requestPermission(
@@ -122,11 +125,35 @@ Future<void> _requestAndroidPermissions() async {
     // Check for missing required permissions
     if (Platform.isAndroid) {
       await _checkRequiredAndroidPermissions();
+    } else if (Platform.isIOS) {
+      await _requestIOSPermissions();
     }
   } on PlatformException catch (e) {
+    showErrorSnackBar('خطأ', e.message);
     print('Failed to request permissions: ${e.code} ${e.message}');
   }
 }
+
+Future<void> _requestIOSPermissions() async {
+  // Request permissions for iOS
+  var iOSSettings = DarwinInitializationSettings(
+    requestSoundPermission: true,
+    requestBadgePermission: true,
+    requestAlertPermission: true,
+  );
+
+  // Initialize FlutterLocalNotificationsPlugin
+  await flutterLocalNotificationsPlugin.initialize(
+    InitializationSettings(
+      iOS: iOSSettings,
+      android: const AndroidInitializationSettings('@mipmap/ic_launcher'),
+    ),
+  );
+
+  // Request permissions explicitly
+  await FirebaseMessaging.instance.requestPermission();
+}
+
 
 Future<void> _checkRequiredAndroidPermissions() async {
   // Check for missing required permissions

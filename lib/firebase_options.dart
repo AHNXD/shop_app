@@ -4,16 +4,6 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
-/// Default [FirebaseOptions] for use with your Firebase apps.
-///
-/// Example:
-/// ```dart
-/// import 'firebase_options.dart';
-/// // ...
-/// await Firebase.initializeApp(
-///   options: DefaultFirebaseOptions.currentPlatform,
-/// );
-/// ```
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -59,17 +49,17 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA-6kiCblgFycpZsKOW-5YyYM2c8zwiB-Y',
-    appId: '1:1081958068030:ios:9a6de3f5e6508aa719066f',
+    apiKey: 'AIzaSyBuMPGmvkrG7asuDFZv4h7mcYgSJ7r1ttQ',
+    appId: '1:1081958068030:ios:0b68e6e0a854f52c19066f',
     messagingSenderId: '1081958068030',
     projectId: 'al-wasit-f0c5c',
     storageBucket: 'al-wasit-f0c5c.appspot.com',
-    iosBundleId: 'com.example.shopApp',
+    iosBundleId: 'com.example.shopAppAHN',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyA-6kiCblgFycpZsKOW-5YyYM2c8zwiB-Y',
-    appId: '1:1081958068030:ios:9a6de3f5e6508aa719066f',
+    apiKey: 'AIzaSyBuMPGmvkrG7asuDFZv4h7mcYgSJ7r1ttQ',
+    appId: '1:1081958068030:ios:0b68e6e0a854f52c19066f',
     messagingSenderId: '1081958068030',
     projectId: 'al-wasit-f0c5c',
     storageBucket: 'al-wasit-f0c5c.appspot.com',
