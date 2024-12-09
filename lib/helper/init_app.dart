@@ -16,7 +16,7 @@ Future<void> initApp() async {
   userInfo = await SharedPreferences.getInstance();
   debugPrint('token ${userInfo.getString('token')} ');
   FirebaseMessaging.instance.getAPNSToken().then(((value) {
-    debugPrint(value.toString());
+    debugPrint("fcm token ${value.toString()}");
     userInfo.setString('fcm_token', value.toString());
   }));
   listenToNotifications();
