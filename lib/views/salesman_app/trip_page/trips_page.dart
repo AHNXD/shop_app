@@ -6,8 +6,8 @@ import 'package:shop_app/constans.dart';
 import 'package:shop_app/controllers/auth_controller.dart';
 import 'package:shop_app/controllers/location_controller.dart';
 import 'package:shop_app/controllers/salesman/trip_controller.dart';
+import 'package:shop_app/helper/cache_helper.dart';
 import 'package:shop_app/helper/custom_snack_bar.dart';
-import 'package:shop_app/main.dart';
 import 'package:shop_app/utils/app_images.dart';
 import 'package:shop_app/views/auth_pages/login_page/login_page.dart';
 import 'package:shop_app/views/salesman_app/trip_page/widgets/filter_trips.dart';
@@ -39,12 +39,12 @@ class TripsPage extends StatelessWidget {
                       onTap: () async {
                         try {
                           String fcmToken =
-                              userInfo.getString('fcm_token').toString();
+                              CacheHelper.getData(key:'fcm_token').toString();
 
                           bool status = await authController.logout(context);
                           if (status) {
-                            userInfo.clear();
-                            userInfo.setString('fcm_token', fcmToken);
+                            CacheHelper.clearData();
+                            CacheHelper.setString(key:'fcm_token',value: fcmToken);
                             Get.offAll(const LoginPage());
                           } else {
                             showErrorSnackBar('حدث خطأ', "اعد المحاولة لاحقا")

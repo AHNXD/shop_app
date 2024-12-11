@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app/constans.dart';
+import 'package:shop_app/helper/cache_helper.dart';
 import 'package:shop_app/helper/custom_snack_bar.dart';
-import 'package:shop_app/main.dart';
 import 'package:shop_app/main_page.dart';
 import 'package:shop_app/models/city_model.dart';
 import 'package:shop_app/views/auth_pages/login_page/login_page.dart';
@@ -172,33 +172,46 @@ class AuthController extends GetxController {
       http.StreamedResponse response, data, context) {
     try {
       if (response.statusCode == 200) {
-        userInfo.setString('role', data['data']['user']['role']);
-        debugPrint('userInfo.getString: ${userInfo.getString('role')}');
+        CacheHelper.setString(key: 'role', value: data['data']['user']['role']);
+        debugPrint('userInfo.getString: ${CacheHelper.getData(key: 'role')}');
         if (data['success'] == true) {
-          userInfo.getString('role') == "customer"
+          CacheHelper.getData(key: 'role') == "customer"
               ? Get.offAll(() => const MainPage())
               : Get.offAll(() => TripsPage());
-          userInfo.setString('id', data['data']['user']['id'].toString());
-          userInfo.setString('name', data['data']['user']['name']);
-          userInfo.setString('contact', data['data']['user']['contact']);
-          userInfo.setString(
-              'longitude', data['data']['user']['longitude'].toString());
-          userInfo.setString(
-              'latitude', data['data']['user']['latitude'].toString());
-          if (userInfo.getString('role') == 'customer') {
-            userInfo.setString('location_details',
-                data['data']['user']['location_details'].toString());
-            userInfo.setString('token', data['data']['access_token']);
-            userInfo.setString(
-                'address_id', data['data']['user']['address']['id'].toString());
-            userInfo.setString(
-                'address_name', data['data']['user']['address']['name']);
-            userInfo.setString('city_id',
-                data['data']['user']['address']['city']['id'].toString());
-            userInfo.setString(
-                'city_name', data['data']['user']['address']['city']['name']);
+          CacheHelper.setString(
+              key: 'id', value: data['data']['user']['id'].toString());
+          CacheHelper.setString(
+              key: 'name', value: data['data']['user']['name']);
+          CacheHelper.setString(
+              key: 'contact', value: data['data']['user']['contact']);
+          CacheHelper.setString(
+              key: 'longitude',
+              value: data['data']['user']['longitude'].toString());
+          CacheHelper.setString(
+              key: 'latitude',
+              value: data['data']['user']['latitude'].toString());
+          if (CacheHelper.getData(key: 'role') == 'customer') {
+            CacheHelper.setString(
+                key: 'location_details',
+                value: data['data']['user']['location_details'].toString());
+            CacheHelper.setString(
+                key: 'token', value: data['data']['access_token']);
+            CacheHelper.setString(
+                key: 'address_id',
+                value: data['data']['user']['address']['id'].toString());
+            CacheHelper.setString(
+                key: 'address_name',
+                value: data['data']['user']['address']['name']);
+            CacheHelper.setString(
+                key: 'city_id',
+                value:
+                    data['data']['user']['address']['city']['id'].toString());
+            CacheHelper.setString(
+                key: 'city_name',
+                value: data['data']['user']['address']['city']['name']);
           } else {
-            userInfo.setString('token', data['data']['access_token']);
+            CacheHelper.setString(
+                key: 'token', value: data['data']['access_token']);
           }
         }
       } else {
@@ -240,7 +253,7 @@ class AuthController extends GetxController {
             'https://62.72.13.145:8090/preview/alwasit.com/api/auth/logout'),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${userInfo.getString('token')}'
+          'Authorization': 'Bearer ${CacheHelper.getData(key: 'token')}'
         },
       );
       debugPrint('data: ${response.statusCode}}');

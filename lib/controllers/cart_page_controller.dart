@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app/constans.dart';
 import 'package:shop_app/controllers/bill_controller.dart';
+import 'package:shop_app/helper/cache_helper.dart';
 import 'package:shop_app/helper/custom_snack_bar.dart';
-import 'package:shop_app/main.dart';
 import 'package:shop_app/models/cart_product_model.dart';
 
 class CartController extends GetxController {
@@ -17,7 +17,7 @@ class CartController extends GetxController {
         Uri.parse('${Constans.kBaseUrl}carts/$id'),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${userInfo.getString('token')}'
+          'Authorization': 'Bearer ${CacheHelper.getData(key: 'token')}'
         },
       );
       var data = jsonDecode(response.body);
@@ -52,7 +52,7 @@ class CartController extends GetxController {
         Uri.parse('${Constans.kBaseUrl}carts'),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${userInfo.getString('token')}'
+          'Authorization': 'Bearer ${CacheHelper.getData(key: 'token')}'
         },
       );
       final controller = Get.put(BillController());
@@ -98,7 +98,7 @@ class CartController extends GetxController {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ${userInfo.getString('token')}'
+            'Authorization': 'Bearer ${CacheHelper.getData(key: 'token')}'
           },
           body: jsonEncode({'_method': "PUT", 'products': cartOrderProducts}));
       var data = jsonDecode(response.body);
@@ -128,7 +128,7 @@ class CartController extends GetxController {
         Uri.parse('${Constans.kBaseUrl}carts'),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${userInfo.getString('token')}'
+          'Authorization': 'Bearer ${CacheHelper.getData(key: 'token')}'
         },
       );
       var data = jsonDecode(response.body);
@@ -152,6 +152,4 @@ class CartController extends GetxController {
       showErrorSnackBar('حدث خطأ', "اعد المحاولة لاحقا").show(context);
     }
   }
-
-
 }

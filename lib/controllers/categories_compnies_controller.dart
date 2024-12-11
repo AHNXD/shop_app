@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shop_app/helper/cache_helper.dart';
 
 import '../constans.dart';
-import '../main.dart';
 import '../models/home_category_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,7 +22,7 @@ class CategoriesCompniesController extends GetxController {
       final response =
           await http.get(Uri.parse('${Constans.kBaseUrl}categories'), headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer ${userInfo.getString('token')}'
+        'Authorization': 'Bearer ${CacheHelper.getData(key: 'token')}'
       });
       var data = jsonDecode(response.body);
       if (response.statusCode == 200) {

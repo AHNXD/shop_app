@@ -5,8 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app/constans.dart';
+import 'package:shop_app/helper/cache_helper.dart';
 import 'package:shop_app/helper/custom_snack_bar.dart';
-import 'package:shop_app/main.dart';
 import 'package:shop_app/models/salesman/user_invoice_info.dart';
 
 class InvoiceController extends GetxController {
@@ -19,7 +19,7 @@ class InvoiceController extends GetxController {
           Uri.parse('${Constans.kBaseUrl}payments/user?contact=$contact'),
           headers: {
             "Accept": 'application/json',
-            'Authorization': 'Bearer ${userInfo.getString('token')}'
+            'Authorization': 'Bearer ${CacheHelper.getData(key:'token')}'
           });
       getUserLoading = false;
       update();
@@ -58,7 +58,7 @@ class InvoiceController extends GetxController {
       final response =
           await http.post(Uri.parse("${Constans.kBaseUrl}payments"), headers: {
         "Accept": 'application/json',
-        'Authorization': 'Bearer ${userInfo.getString('token')}'
+        'Authorization': 'Bearer ${CacheHelper.getData(key:'token')}'
       }, body: {
         'amount': amount,
         'customer_id': customerId

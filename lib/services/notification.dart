@@ -1,173 +1,91 @@
-// import 'package:firebase_messaging/firebase_messaging.dart';
-// import 'package:flutter/material.dart';
-
-// void listenToNotifications() {
-//   // Foreground messages
-//   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-//     debugPrint('Got a message whilst in the foreground!');
-//     debugPrint('Message data: ${message.data}');
-
-//     if (message.notification != null) {
-//       debugPrint(
-//           'Message also contained a notification: ${message.notification}');
-//       debugPrint(
-//           '${message.notification!.title} ${message.notification!.body}');
-//     }
-//   });
-
-//   // Background messages
-//   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-
-//   // Messages when the app is opened from a notification
-//   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-//     debugPrint('A new message appeared! ${message.messageId} ${message.data}');
-//   });
-// }
-
-// @pragma('vm:entry-point')
-// Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-//   debugPrint("Handling a background message: ${message.messageId}");
-// }
-
-import 'dart:io';
-
+import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:shop_app/helper/custom_snack_bar.dart';
+import 'package:shop_app/helper/cache_helper.dart';
 
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'high_importance_channel', // id
-  'High Importance Notifications', // title
-  description:
-      'This channel is used for important notifications.', // description
-  importance: Importance.high,
-);
+Future<void> handleBackgroundMessage(RemoteMessage message) async {}
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+class FirebaseApi {
+  final _firebaseMessaging = FirebaseMessaging.instance;
 
-void listenToNotifications() {
-  // Request iOS permissions
-  FirebaseMessaging.instance.requestPermission();
+  final _androidChannel = const AndroidNotificationChannel(
+    'high_importance_channel',
+    'Highly Important Notifications',
+    description: 'This Cahnnel is used for important nots',
+    importance: Importance.defaultImportance,
+  );
 
-  // Foreground messages
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
+  final _localNotifications = FlutterLocalNotificationsPlugin();
+  void handleMessage(RemoteMessage? message) {
+    // what to do
+  }
 
-    if (notification != null && android != null) {
-          showInfoSnackBar(message.notification?.title, message.notification?.body);
-      // flutterLocalNotificationsPlugin.show(
-      //   notification.hashCode,
-      //   notification.title,
-      //   notification.body,
-      //   NotificationDetails(
-      //     iOS: DarwinNotificationDetails(),
-      //     android: AndroidNotificationDetails(
-      //       channel.id,
-      //       channel.name,
-      //       channelDescription: channel.description,
-      //       icon: '@mipmap/ic_launcher',
-      //     ),
-      //   ),
-      // );
-    }
-  });
+  Future initLocalNotifications() async {
+    const android = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const ios = DarwinInitializationSettings();
 
-  // Background messages
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    const settings = InitializationSettings(android: android, iOS: ios);
 
-  // Messages when the app is opened from a notification
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    showInfoSnackBar(message.notification?.title, message.notification?.body);
-  });
-}
+    await _localNotifications.initialize(settings);
+    final platform = _localNotifications.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
 
-@pragma('vm:entry-point')
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // Handle background messages
-  RemoteNotification? notification = message.notification;
-  AndroidNotification? android = message.notification?.android;
+    await platform?.createNotificationChannel(_androidChannel);
+  }
 
-  if (notification != null && android != null) {
-    await flutterLocalNotificationsPlugin.show(
-      notification.hashCode,
-      notification.title,
-      notification.body,
-      NotificationDetails(
-        iOS: DarwinNotificationDetails(),
-        android: AndroidNotificationDetails(
-          channel.id,
-          channel.name,
-          channelDescription: channel.description,
-          icon: 'launch_background',
+  Future initPushNotifications() async {
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+            alert: true, badge: true, sound: true);
+
+    FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
+    FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
+    FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+    FirebaseMessaging.onMessage.listen((message) {
+      final notification = message.notification;
+      if (notification == null) return;
+      _localNotifications.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            _androidChannel.id,
+            _androidChannel.name,
+            channelDescription: _androidChannel.description,
+            icon: '@mipmap/ic_launcher',
+            autoCancel: true,
+          ),
         ),
-      ),
-    );
+        payload: jsonEncode(message.toMap()),
+      );
+    });
   }
-}
 
-Future<void> _requestNotifPermissions() async {
-  try {
-    // Request notification permissions
-    await FirebaseMessaging.instance.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
+  Future<void> saveToken() async {
+    final bool? hasToken = await CacheHelper.getData(key: "hasFCMToken");
+    log(hasToken.toString());
+    final fCMToken = await _firebaseMessaging.getAPNSToken();
+    final String? token = await CacheHelper.getData(key: "token");
+    if (token != null) {
+      if (hasToken == null || !hasToken) {
+        //final String? userType = await CacheHelper.getData(key: "userType");
 
-    // Check for missing required permissions
-    if (Platform.isAndroid) {
-      await _checkRequiredAndroidPermissions();
-    } else if (Platform.isIOS) {
-      await _requestIOSPermissions();
-    }
-  } on PlatformException catch (e) {
-    showErrorSnackBar('خطأ', e.message);
-    print('Failed to request permissions: ${e.code} ${e.message}');
-  }
-}
-
-Future<void> _requestIOSPermissions() async {
-  // Request permissions for iOS
-  var iOSSettings = DarwinInitializationSettings(
-    requestSoundPermission: true,
-    requestBadgePermission: true,
-    requestAlertPermission: true,
-  );
-
-  // Initialize FlutterLocalNotificationsPlugin
-  await flutterLocalNotificationsPlugin.initialize(
-    InitializationSettings(
-      iOS: iOSSettings,
-      android: const AndroidInitializationSettings('@mipmap/ic_launcher'),
-    ),
-  );
-
-  // Request permissions explicitly
-  await FirebaseMessaging.instance.requestPermission();
-}
-
-
-Future<void> _checkRequiredAndroidPermissions() async {
-  // Check for missing required permissions
-  if (!await _hasNecessaryPermissions()) {
-    // Request missing permissions
-    if (!await _hasNecessaryPermissions()) {
-      // Request missing permissions
-      await Permission.notification.request();
+        await CacheHelper.setBool(key: "hasFCMToken", value: true);
+      }
     }
   }
-}
 
-Future<bool> _hasNecessaryPermissions() async {
-  // Check if notification permission is granted
-  PermissionStatus notificationStatus = await Permission.notification.status;
-  return notificationStatus.isGranted;
+  Future<void> initNotifications() async {
+    await _firebaseMessaging.requestPermission();
+    // String? userType = CacheHelper.getData(key: "userType");
+    // if (userType != null) {
+    //   await _firebaseMessaging.subscribeToTopic(userType);
+    // }
+    await saveToken();
+    await initPushNotifications();
+    await initLocalNotifications();
+  }
 }

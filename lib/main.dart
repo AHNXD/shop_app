@@ -1,14 +1,13 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:shop_app/helper/init_app.dart';
+
 import 'package:shop_app/views/Splash/presentation/views/splash_view.dart';
 
-late SharedPreferences userInfo;
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -22,9 +21,6 @@ class MyHttpOverrides extends HttpOverrides {
 void main() async {
   await initApp();
   HttpOverrides.global = MyHttpOverrides();
-
-  log("first use : ${userInfo.getBool('first_use')}");
-
   runApp(
     const MyApp(),
   );

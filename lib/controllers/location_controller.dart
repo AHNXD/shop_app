@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:shop_app/constans.dart';
 import 'package:http/http.dart' as http;
-import 'package:shop_app/main.dart';
+import 'package:shop_app/helper/cache_helper.dart';
 import 'package:shop_app/views/auth_pages/login_page/login_page.dart';
 
 class LocationController extends GetxController {
@@ -24,7 +24,7 @@ class LocationController extends GetxController {
           Uri.parse("${Constans.kBaseUrl}salesmen/update-location"),
           headers: {
             'Accept': 'application/json',
-            'Authorization': 'Bearer ${userInfo.getString('token')}',
+            'Authorization': 'Bearer ${CacheHelper.getData(key:'token')}',
           },
           body: locationDetails);
       if (response.statusCode >= 200 && response.statusCode < 300) {

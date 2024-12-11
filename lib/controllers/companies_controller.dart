@@ -4,8 +4,8 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app/constans.dart';
+import 'package:shop_app/helper/cache_helper.dart';
 import 'package:shop_app/helper/custom_snack_bar.dart';
-import 'package:shop_app/main.dart';
 
 import '../models/company.dart';
 
@@ -24,7 +24,7 @@ class CompaniesController extends GetxController {
         Uri.parse('${Constans.kBaseUrl}companies'),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${userInfo.getString('token')}',
+          'Authorization': 'Bearer ${CacheHelper.getData(key:'token')}',
         },
       );
 

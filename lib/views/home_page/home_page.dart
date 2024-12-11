@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shop_app/controllers/auth_controller.dart';
+import 'package:shop_app/helper/cache_helper.dart';
 import 'package:shop_app/helper/custom_snack_bar.dart';
-import 'package:shop_app/main.dart';
 import 'package:shop_app/utils/app_images.dart';
 import 'package:shop_app/views/auth_pages/login_page/login_page.dart';
 import 'package:shop_app/views/cart_page/cart_page.dart';
@@ -48,13 +48,13 @@ class HomePage extends StatelessWidget {
         actions: [
           GestureDetector(
             onTap: () async {
-              String fcmToken = userInfo.getString('fcm_token').toString();
-              bool firstUse = userInfo.getBool('first_use') ?? true;
+              String fcmToken = CacheHelper.getData(key:'fcm_token').toString();
+              bool firstUse = CacheHelper.getData(key: 'hasFCMToken') ?? true;
               bool status = await controller.logout(context);
               if (status) {
-                userInfo.clear();
-                userInfo.setString('fcm_token', fcmToken);
-                userInfo.setBool('first_use', firstUse);
+                CacheHelper.clearData();
+                CacheHelper.setString(key: 'fcm_token', value: fcmToken);
+                CacheHelper.setBool(key:'hasFCMToken',value: firstUse);
 
                 Get.offAll(const LoginPage());
               } else {

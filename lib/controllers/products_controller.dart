@@ -6,8 +6,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app/constans.dart';
 import 'package:shop_app/controllers/home_page_controller.dart';
+import 'package:shop_app/helper/cache_helper.dart';
 import 'package:shop_app/helper/custom_snack_bar.dart';
-import 'package:shop_app/main.dart';
 
 class ProductsController extends GetxController {
   final scrollController = ScrollController();
@@ -39,7 +39,7 @@ class ProductsController extends GetxController {
       }
       final response = await http.get(Uri.parse(url), headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer ${userInfo.getString('token')}'
+        'Authorization': 'Bearer ${CacheHelper.getData(key:'token')}'
       });
       log('page $pageNumberr');
       var data = jsonDecode(response.body);

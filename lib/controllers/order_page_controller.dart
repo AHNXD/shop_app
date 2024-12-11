@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shop_app/constans.dart';
+import 'package:shop_app/helper/cache_helper.dart';
 import 'package:shop_app/helper/custom_snack_bar.dart';
-import 'package:shop_app/main.dart';
 import 'package:shop_app/models/order_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app/views/auth_pages/login_page/login_page.dart';
@@ -33,7 +33,7 @@ class OrderPageController extends GetxController {
       final response = await http
           .get(Uri.parse('${Constans.kBaseUrl}orders/pending'), headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer ${userInfo.getString('token')}'
+        'Authorization': 'Bearer ${CacheHelper.getData(key:'token')}'
       });
       var data = jsonDecode(response.body);
       debugPrint('data: $data');
@@ -68,7 +68,7 @@ class OrderPageController extends GetxController {
       final response = await http
           .get(Uri.parse('${Constans.kBaseUrl}orders/cancelled'), headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer ${userInfo.getString('token')}'
+        'Authorization': 'Bearer ${CacheHelper.getData(key:'token')}'
       });
       var data = jsonDecode(response.body);
       debugPrint('data: $data');
@@ -101,7 +101,7 @@ class OrderPageController extends GetxController {
       final response = await http
           .get(Uri.parse('${Constans.kBaseUrl}orders/accepted'), headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer ${userInfo.getString('token')}'
+        'Authorization': 'Bearer ${CacheHelper.getData(key:'token')}'
       });
       var data = jsonDecode(response.body);
       debugPrint('data: $data');
@@ -135,7 +135,7 @@ class OrderPageController extends GetxController {
       final response = await http
           .get(Uri.parse('${Constans.kBaseUrl}orders/missing'), headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer ${userInfo.getString('token')}'
+        'Authorization': 'Bearer ${CacheHelper.getData(key:'token')}'
       });
       var data = jsonDecode(response.body);
       debugPrint('data: $data');
@@ -169,7 +169,7 @@ class OrderPageController extends GetxController {
       final response = await http
           .get(Uri.parse('${Constans.kBaseUrl}orders/archived'), headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer ${userInfo.getString('token')}'
+        'Authorization': 'Bearer ${CacheHelper.getData(key:'token')}'
       });
       var data = jsonDecode(response.body);
       debugPrint('data: $data');
@@ -208,7 +208,7 @@ class OrderPageController extends GetxController {
       final response =
           await http.get(Uri.parse('${Constans.kBaseUrl}orders/$id'), headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer ${userInfo.getString('token')}'
+        'Authorization': 'Bearer ${CacheHelper.getData(key:'token')}'
       });
       var data = jsonDecode(response.body);
       debugPrint('data: $data');
@@ -230,7 +230,7 @@ class OrderPageController extends GetxController {
       final response = await http
           .get(Uri.parse('${Constans.kBaseUrl}orders/archived/$id'), headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer ${userInfo.getString('token')}'
+        'Authorization': 'Bearer ${CacheHelper.getData(key:'token')}'
       });
       var data = jsonDecode(response.body);
       debugPrint('data: $data');
@@ -256,7 +256,7 @@ class OrderPageController extends GetxController {
           Uri.parse('${Constans.kBaseUrl}orders/${id.toString()}'),
           headers: {
             'Accept': 'application/json',
-            'Authorization': 'Bearer ${userInfo.getString('token')}'
+            'Authorization': 'Bearer ${CacheHelper.getData(key:'token')}'
           });
       cancelOrderLoading = false;
       update();

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shop_app/main.dart';
+import 'package:shop_app/helper/cache_helper.dart';
 import 'package:shop_app/main_page.dart';
 import 'package:shop_app/utils/app_images.dart';
 import 'package:shop_app/views/auth_pages/login_page/login_page.dart';
@@ -69,11 +69,11 @@ class _SplashViewbodyState extends State<SplashViewbody>
     Future.delayed(
       const Duration(seconds: 3),
       () {
-        userInfo.getBool('first_use') != false
+        CacheHelper.getData(key: 'hasFCMToken') != false
             ? Get.offAll(() => OnBoardingPage())
-            : userInfo.getString('token') == null
+            : CacheHelper.getData(key: 'token') == null
                 ? Get.offAll(() => LoginPage())
-                : userInfo.getString('role') == 'customer'
+                : CacheHelper.getData(key: 'role') == 'customer'
                     ? Get.offAll(() => MainPage())
                     : Get.offAll(() => TripsPage());
       },

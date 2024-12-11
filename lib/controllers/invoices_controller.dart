@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app/constans.dart';
+import 'package:shop_app/helper/cache_helper.dart';
 import 'package:shop_app/helper/custom_snack_bar.dart';
-import 'package:shop_app/main.dart';
 import 'package:shop_app/models/company_model.dart';
 import 'package:shop_app/models/invoices_model.dart';
 
@@ -26,7 +26,7 @@ class InvoicesController extends GetxController {
             '${Constans.kBaseUrl}payments?company_id=$companyId&$startDate=&end_date=$endDate'),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${userInfo.getString('token')}'
+          'Authorization': 'Bearer ${CacheHelper.getData(key:'token')}'
         },
       );
       var data = jsonDecode(response.body);
@@ -58,7 +58,7 @@ class InvoicesController extends GetxController {
         Uri.parse('${Constans.kBaseUrl}companies'),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${userInfo.getString('token')}'
+          'Authorization': 'Bearer ${CacheHelper.getData(key:'token')}'
         },
       );
       var data = jsonDecode(response.body);

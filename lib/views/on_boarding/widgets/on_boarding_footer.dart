@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shop_app/constans.dart';
 import 'package:shop_app/controllers/on_boarding_controller.dart';
+import 'package:shop_app/helper/cache_helper.dart';
 import 'package:shop_app/helper/custom_snack_bar.dart';
-import 'package:shop_app/main.dart';
 import 'package:shop_app/views/auth_pages/login_page/login_page.dart';
 import 'package:shop_app/views/auth_pages/login_page/widgets/custom_button.dart';
 import 'package:shop_app/views/privac_policy_page.dart/privacy_policy.dart';
@@ -24,7 +24,7 @@ class OnBoardingFooter extends StatelessWidget {
               CustomButton(
                 onTap: () {
                   if (controller.isChecked) {
-                    userInfo.setBool('first_use', false);
+                    CacheHelper.setBool(key:'hasFCMToken', value:false);
                     debugPrint('change first use value');
                     Get.offAll(LoginPage());
                   } else {

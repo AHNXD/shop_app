@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app/constans.dart';
+import 'package:shop_app/helper/cache_helper.dart';
 import 'package:shop_app/helper/custom_snack_bar.dart';
-import 'package:shop_app/main.dart';
 import 'package:shop_app/models/salesman/trip_details_model.dart';
 import 'package:shop_app/models/salesman/trip_model.dart';
 import 'package:shop_app/views/auth_pages/login_page/login_page.dart';
@@ -27,7 +27,7 @@ class TripPageController extends GetxController {
         Uri.parse("${Constans.kBaseUrl}salesman/trips?date=$tripDate"),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${userInfo.getString('token')}'
+          'Authorization': 'Bearer ${CacheHelper.getData(key: 'token')}'
         },
       );
       tripsLoading = false;
@@ -62,7 +62,7 @@ class TripPageController extends GetxController {
         Uri.parse("${Constans.kBaseUrl}salesman/trips/$id"),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer ${userInfo.getString('token')}'
+          'Authorization': 'Bearer ${CacheHelper.getData(key: 'token')}'
         },
       );
       showTripLoading = false;
