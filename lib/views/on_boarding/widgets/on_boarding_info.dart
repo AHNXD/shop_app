@@ -41,7 +41,11 @@ class OnBoardingInfo extends StatelessWidget {
         ),
         const Text(
           " اكتشف أحدث المنتجات بأسعار تنافسية وتسوق بسهولة من بين مجموعة واسعة من المنتجات التي تناسب احتياجاتك ثم احصل على مشترياتك بسرعة مع خدمات التوصيل الآمنة إلى المكان الذي تريد.",
-          style: TextStyle(fontFamily: Constans.kFontFamily, height: 1.5),
+          style: TextStyle(
+            fontFamily: Constans.kFontFamily,
+            height: 1.5,
+          ),
+          textAlign: TextAlign.justify,
         ),
       ],
     );

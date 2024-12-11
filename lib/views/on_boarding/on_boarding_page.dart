@@ -19,6 +19,7 @@ class OnBoardingPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 OnBoardingInfo(),
+                SizedBox(height: 16),
                 OnBoardingFooter(),
               ],
             ),
