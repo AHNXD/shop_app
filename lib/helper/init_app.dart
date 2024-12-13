@@ -10,7 +10,7 @@ Future<void> initApp() async {
   try {
     if (Firebase.apps.isEmpty) {
       await Firebase.initializeApp(
-        name: 'BrokerApp',
+        //name: 'BrokerApp',
         options: DefaultFirebaseOptions.currentPlatform,
       );
     }

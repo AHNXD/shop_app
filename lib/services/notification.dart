@@ -14,7 +14,7 @@ class FirebaseApi {
     'high_importance_channel',
     'Highly Important Notifications',
     description: 'This Cahnnel is used for important nots',
-    importance: Importance.defaultImportance,
+    importance: Importance.max,
   );
 
   final _localNotifications = FlutterLocalNotificationsPlugin();

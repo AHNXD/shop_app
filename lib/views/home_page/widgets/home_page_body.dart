@@ -81,21 +81,19 @@ class HomePageBody extends StatelessWidget {
                               ),
                             ),
                             Spacer(),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.all(12.0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Get.to(() => AllCompaniesPage());
-                                  },
-                                  child: Text(
-                                    "عرض جميع الشركات",
-                                    style: TextStyle(
-                                        color: Constans.kMainColor,
-                                        fontSize: 15,
-                                        fontFamily: 'Cairo',
-                                        fontWeight: FontWeight.bold),
-                                  ),
+                            Padding(
+                              padding: EdgeInsets.all(12.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Get.to(() => AllCompaniesPage());
+                                },
+                                child: Text(
+                                  "عرض جميع الشركات",
+                                  style: TextStyle(
+                                      color: Constans.kMainColor,
+                                      fontSize: 15,
+                                      fontFamily: 'Cairo',
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),
