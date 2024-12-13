@@ -8,13 +8,15 @@ Future<void> initApp() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp(
+        name: 'BrokerApp',
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+    }
   } catch (e) {
     print("Firebase initialization error: $e");
   }
-
   await CacheHelper.init();
   await FirebaseApi().initNotifications();
 }

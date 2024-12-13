@@ -69,7 +69,7 @@ class _SplashViewbodyState extends State<SplashViewbody>
     Future.delayed(
       const Duration(seconds: 3),
       () {
-        CacheHelper.getData(key: 'hasFCMToken') != false
+        CacheHelper.getData(key: 'hasFCMToken') == false
             ? Get.offAll(() => OnBoardingPage())
             : CacheHelper.getData(key: 'token') == null
                 ? Get.offAll(() => LoginPage())

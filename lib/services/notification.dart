@@ -67,15 +67,15 @@ class FirebaseApi {
   Future<void> saveToken() async {
     final bool? hasToken = await CacheHelper.getData(key: "hasFCMToken");
     log("hasFCMToken: ${hasToken.toString()}");
-    final fCMToken = await _firebaseMessaging.getAPNSToken();
+    final fCMToken = await _firebaseMessaging.getToken();
     log("fCMToken: ${fCMToken.toString()}");
     final String? token = await CacheHelper.getData(key: "token");
     log("token: ${token.toString()}");
     if (token != null) {
       if (hasToken == null || !hasToken) {
-        //final String? userType = await CacheHelper.getData(key: "userType");
         //here we have to send the fcm token
         await CacheHelper.setBool(key: "hasFCMToken", value: true);
+        await CacheHelper.setString(key: "FCMtoken", value: fCMToken ?? "");
       }
     }
   }

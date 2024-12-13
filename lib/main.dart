@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -7,7 +8,6 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:shop_app/helper/init_app.dart';
 
 import 'package:shop_app/views/Splash/presentation/views/splash_view.dart';
-
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -20,6 +20,8 @@ class MyHttpOverrides extends HttpOverrides {
 
 void main() async {
   await initApp();
+  print('Number of Firebase apps: ${Firebase.apps.length}');
+
   HttpOverrides.global = MyHttpOverrides();
   runApp(
     const MyApp(),
