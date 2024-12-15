@@ -16,7 +16,7 @@ class ProductsController extends GetxController {
   List productsList = [];
   int? selectedCategory;
   int? companyId;
-  int pageNumberr = 1;
+  int pageNumber = 1;
   String searchText = '';
   bool productsLoading = false;
   bool productsError = false;
@@ -24,28 +24,32 @@ class ProductsController extends GetxController {
     String url = "";
     if (companyId != null) {
       url =
-          "${Constans.kBaseUrl}products?category_id=$selectedCategory&company_id=$companyId&page=$pageNumberr&s=$searchText";
+          "${Constans.kBaseUrl}products/customers/index?category_id=$selectedCategory&company_id=$companyId&page=$pageNumber&s=$searchText";
     } else {
       url =
-          "${Constans.kBaseUrl}products?category_id=$selectedCategory&page=$pageNumberr&s=$searchText";
+          "${Constans.kBaseUrl}products/customers/index?category_id=$selectedCategory&page=$pageNumber&s=$searchText";
     }
 
     productsError = false;
     try {
-      if (pageNumberr == 1) {
+      if (pageNumber == 1) {
         productsLoading = true;
         productsList.clear();
         update();
       }
-      final response = await http.get(Uri.parse(url), headers: {
+      Map<String, String> headers = {
         'Accept': 'application/json',
-        'Authorization': 'Bearer ${CacheHelper.getData(key:'token')}'
-      });
-      log('page $pageNumberr');
+        'Authorization': 'Bearer ${CacheHelper.getData(key: 'token')}'
+      };
+      log("The token is: ${CacheHelper.getData(key: 'token')}");
+      log("The headers is: ${headers}");
+      final response = await http.get(Uri.parse(url), headers: headers);
+      log('page $pageNumber');
+      log(response.body);
       var data = jsonDecode(response.body);
       log(url);
       log('products: ${data['data']}');
-      if (pageNumberr == 1) {
+      if (pageNumber == 1) {
         productsLoading = false;
         update();
       }
@@ -93,11 +97,11 @@ class ProductsController extends GetxController {
       isLoadingMoreData = true;
       update();
       page = page + 1;
-      pageNumberr++;
+      pageNumber++;
       await getAllProducts();
       isLoadingMoreData = false;
       update();
-      debugPrint("$pageNumberr ${controller.selectedCategoryId}");
+      debugPrint("$pageNumber ${controller.selectedCategoryId}");
     }
   }
 }

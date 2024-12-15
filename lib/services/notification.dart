@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shop_app/helper/cache_helper.dart';
@@ -115,16 +116,17 @@ class FirebaseApi {
   Future<void> saveToken() async {
     final bool? hasToken = await CacheHelper.getData(key: "hasFCMToken");
     log("hasFCMToken: ${hasToken.toString()}");
-    final fCMToken = await _firebaseMessaging.getToken();
+    final fCMToken = Platform.isAndroid
+        ? await _firebaseMessaging.getToken()
+        : await _firebaseMessaging.getAPNSToken();
     log("fCMToken: ${fCMToken.toString()}");
     final String? token = await CacheHelper.getData(key: "token");
     log("token: ${token.toString()}");
-    if (token != null) {
-      if (hasToken == null || !hasToken) {
-        //here we have to send the fcm token
-        await CacheHelper.setBool(key: "hasFCMToken", value: true);
-        await CacheHelper.setString(key: "fcm_token", value: fCMToken ?? "");
-      }
+
+    if (hasToken == null || !hasToken) {
+      //here we have to send the fcm token
+      await CacheHelper.setBool(key: "hasFCMToken", value: true);
+      await CacheHelper.setString(key: "fcm_token", value: fCMToken!);
     }
   }
 

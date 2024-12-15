@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Constans {
   static const String kHost = "192.168.40.117";
-  static const ip = "192.168.1.129";
+  static const ip = "192.168.1.2";
   static const String kBaseUrl = "http://$ip:8000/api/";
   // static const String kBaseUrl =
   //     "https://62.72.13.145:8090/preview/dash.broker-sy.com/api/";

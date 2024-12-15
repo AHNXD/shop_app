@@ -51,14 +51,56 @@ class ProductDetails extends StatelessWidget {
                     fontFamily: Constans.kFontFamily),
               ),
               const SizedBox(height: 16),
-              Text(
-                '${product.price} ل.س',
-                style: const TextStyle(
-                    fontSize: 18,
-                    color: Constans.kMainColor,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: Constans.kFontFamily),
-              ),
+              product.price_after_discount == null
+                  ? Text(
+                      '${product.price} ل.س',
+                      style: const TextStyle(
+                          fontSize: 18,
+                          color: Constans.kMainColor,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: Constans.kFontFamily),
+                    )
+                  : Column(
+                      children: [
+                        Text(
+                          '${product.price} ل.س',
+                          style: const TextStyle(
+                              decoration: TextDecoration.lineThrough,
+                              fontSize: 14,
+                              color: Constans.kMainColor,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: Constans.kFontFamily),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircleAvatar(
+                              radius: 16,
+                              backgroundColor: Colors.red,
+                              child: Text(
+                                '%${((1 - (product.price_after_discount! / product.price!)) * 100).toStringAsFixed(0)}',
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: Constans.kFontFamily),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text(
+                              '${product.price_after_discount} ل.س',
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: Constans.kFontFamily),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
               const SizedBox(height: 16),
               Center(
                 child: ElevatedButton.icon(

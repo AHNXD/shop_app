@@ -54,7 +54,7 @@ class CategoirsCompaniesGridView extends StatelessWidget {
                                       controller.categoryList[index].id.toInt();
                                   productsController.companyId = companyId;
                                   productsController.productsList.clear();
-                                  productsController.pageNumberr = 1;
+                                  productsController.pageNumber = 1;
                                   productsController.searchText = '';
                                   log('selected category ${controller.categoryList[index].name.toString()}');
                                   log('selected company $companyId');

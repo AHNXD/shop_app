@@ -55,7 +55,7 @@ class HomeProductsList extends StatelessWidget {
                                   productsController.selectedCategory =
                                       controller.categoryList[index].id.toInt();
                                   productsController.productsList.clear();
-                                  productsController.pageNumberr = 1;
+                                  productsController.pageNumber = 1;
                                   productsController.companyId = null;
                                   productsController.searchText = '';
                                   log('selected category ${controller.categoryList[index].name.toString()}');

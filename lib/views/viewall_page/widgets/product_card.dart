@@ -95,13 +95,35 @@ class ProductCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        maxLines: 2,
-                        model.name ?? '',
-                        style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: Constans.kFontFamily),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: true,
+                              maxLines: 2,
+                              model.name ?? '',
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: Constans.kFontFamily),
+                            ),
+                          ),
+                          if (model.price_after_discount != null)
+                            CircleAvatar(
+                              radius: 16,
+                              backgroundColor: Colors.red,
+                              child: Text(
+                                '%${((1 - (model.price_after_discount! / model.price!)) * 100).toStringAsFixed(0)}',
+                                style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: Constans.kFontFamily),
+                              ),
+                            ),
+                        ],
                       ),
                       Text(
                         isOrderCard
@@ -113,14 +135,36 @@ class ProductCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             fontFamily: Constans.kFontFamily),
                       ),
-                      Text(
-                        '${model.price} ل.س ',
-                        style: const TextStyle(
-                            color: Colors.black54,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: Constans.kFontFamily),
-                      ),
+                      model.price_after_discount == null
+                          ? Text(
+                              '${model.price} ل.س ',
+                              style: const TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: Constans.kFontFamily),
+                            )
+                          : Column(
+                              children: [
+                                Text(
+                                  '${model.price} ل.س ',
+                                  style: const TextStyle(
+                                      decoration: TextDecoration.lineThrough,
+                                      color: Colors.black54,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: Constans.kFontFamily),
+                                ),
+                                Text(
+                                  '${model.price_after_discount} ل.س ',
+                                  style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: Constans.kFontFamily),
+                                )
+                              ],
+                            ),
                       isOrderCard
                           ? Text(
                               'الكمية ${model.quantity}',
