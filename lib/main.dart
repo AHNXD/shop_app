@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -20,7 +21,7 @@ class MyHttpOverrides extends HttpOverrides {
 
 void main() async {
   await initApp();
-  print('Number of Firebase apps: ${Firebase.apps.length}');
+  log('Number of Firebase apps: ${Firebase.apps.length}');
 
   HttpOverrides.global = MyHttpOverrides();
   runApp(

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shop_app/firebase_options.dart';
@@ -15,7 +17,7 @@ Future<void> initApp() async {
       );
     }
   } catch (e) {
-    print("Firebase initialization error: $e");
+    log("Firebase initialization error: $e");
   }
   await CacheHelper.init();
   await FirebaseApi().initNotifications();
