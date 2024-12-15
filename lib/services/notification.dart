@@ -123,7 +123,7 @@ class FirebaseApi {
       if (hasToken == null || !hasToken) {
         //here we have to send the fcm token
         await CacheHelper.setBool(key: "hasFCMToken", value: true);
-        await CacheHelper.setString(key: "FCMtoken", value: fCMToken ?? "");
+        await CacheHelper.setString(key: "fcm_token", value: fCMToken ?? "");
       }
     }
   }
