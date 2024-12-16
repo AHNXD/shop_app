@@ -35,7 +35,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                     onSubmitted: (data) async {
                       controller.searchText = data;
                       controller.productsList = [];
-                      controller.pageNumberr = 1;
+                      controller.pageNumber = 1;
                       controller.productsLoading = true;
                       controller.selectedCategory = widget.categoryId;
                       controller.companyId = widget.companyId;

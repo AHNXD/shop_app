@@ -1,8 +1,8 @@
-
 class ProductModel {
   final num? id;
   final String? name;
   final num? price;
+  final num? price_after_discount;
   final num? quantity;
   final String? unitType;
   final String? company;
@@ -12,6 +12,7 @@ class ProductModel {
       {required this.id,
       required this.name,
       required this.price,
+      required this.price_after_discount,
       required this.quantity,
       required this.unitType,
       required this.company,
@@ -28,8 +29,9 @@ class ProductModel {
         id: json['id'],
         name: json['name'],
         price: json['price'],
+        price_after_discount: json['price_after_discount'],
         unitType: json['unit_type'],
-        company: json['company']??'test',
+        company: json['company'] ?? 'test',
         images: tempImages,
         quantity: json['quantity']);
   }

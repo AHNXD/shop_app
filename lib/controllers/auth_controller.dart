@@ -161,8 +161,7 @@ class AuthController extends GetxController {
       request.fields.addAll({
         'contact': phoneNumber,
         'password': password,
-        'device_token': CacheHelper.getData(key: "FCMtoken")
-        //'device_token': userInfo.getString('fcm_token')!
+        'device_token': CacheHelper.getData(key: "fcm_token")
       });
 
       request.headers.addAll(headers);
