@@ -196,8 +196,8 @@ class AuthController extends GetxController {
               CacheHelper.getData(key: 'role') == "customer"
                   ? Get.offAll(() => const MainPage())
                   : Get.offAll(() => TripsPage());
-              var controller = Get.put(NavigationController());
-              controller.selectedIndex = 4;
+              // var controller = Get.put(NavigationController());
+              // controller.selectedIndex = 4;
             } else {
               showInfoSnackBar(
                 'حدث خطأ',
@@ -286,7 +286,8 @@ class AuthController extends GetxController {
         },
         body: {
           'name': userName,
-          'location_details': locationDetails,
+          'location_details':
+              locationDetails == "" ? "حدد الموقع" : locationDetails,
           'longitude': longitude,
           'latitude': latitude,
           'start_time': startTime,
