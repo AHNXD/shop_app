@@ -295,15 +295,6 @@ class AuthController extends GetxController {
           'address_id': addressId
         },
       );
-      print({
-        'name': userName,
-        'location_details': locationDetails,
-        'longitude': longitude,
-        'latitude': latitude,
-        'start_time': startTime,
-        'end_time': endTime,
-        'address_id': addressId
-      });
 
       final data = jsonDecode(response.body);
       if (response.statusCode == 200 && data['success'] == true) {
