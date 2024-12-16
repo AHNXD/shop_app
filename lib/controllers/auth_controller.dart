@@ -1,10 +1,12 @@
-import 'dart:convert';
+// ignore_for_file: prefer_interpolation_to_compose_strings
 
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app/constans.dart';
+import 'package:shop_app/controllers/navigation_controller.dart';
 import 'package:shop_app/helper/cache_helper.dart';
 import 'package:shop_app/helper/custom_snack_bar.dart';
 import 'package:shop_app/main_page.dart';
@@ -47,6 +49,9 @@ class AuthController extends GetxController {
     debugPrint('longitude: ${longitude}');
     latitude = locationData.latitude.toString();
     debugPrint('latitude: ${latitude}');
+    CacheHelper.setString(key: 'longitude', value: longitude);
+    CacheHelper.setString(key: 'latitude', value: latitude);
+    print("Location Saved!");
     isgetLocation = false;
     update();
     return true;
@@ -145,14 +150,6 @@ class AuthController extends GetxController {
     }
   }
 
-  // Future loginUser(String phone, pass) async {
-  //   final response = await http.post(
-  //       Uri.parse('${Constans.kBaseUrl}auth/login'),
-  //       headers: {'Accept': 'application/json'},
-  //       body: jsonEncode({'contact': phone, 'password': pass}));
-  //   var data = jsonDecode(response.body);
-  //   debugPrint('login: ${data}');
-  // }
   Future loginUser(context) async {
     try {
       var headers = {'Accept': 'application/json'};
@@ -177,16 +174,49 @@ class AuthController extends GetxController {
   }
 
   void handleLoginResponseStatus(
-      http.StreamedResponse response, data, context) {
+      http.StreamedResponse response, data, context) async {
     try {
       if (response.statusCode == 200) {
         CacheHelper.setString(key: 'role', value: data['data']['user']['role']);
         debugPrint('userInfo.getString: ${CacheHelper.getData(key: 'role')}');
         if (data['success'] == true) {
-          CacheHelper.getData(key: 'role') == "customer"
-              ? Get.offAll(() => const MainPage())
-              : Get.offAll(() => TripsPage());
-          saveUserInfo(data);
+          if ((data['data']['user']['longitude'] ?? "") == "" &&
+              (data['data']['user']['latitude'] ?? "") == "") {
+            showInfoSnackBar(
+              'الرجاء الإنتظار يتم تحديث الموقع',
+              data['message'],
+            ).show(context);
+            bool result = await locationService();
+            if (result) {
+              data['data']['user']['longitude'] = longitude;
+              data['data']['user']['latitude'] = latitude;
+              saveUserInfo(data);
+              getUserInfo();
+              updateUserProfile(context);
+              CacheHelper.getData(key: 'role') == "customer"
+                  ? Get.offAll(() => const MainPage())
+                  : Get.offAll(() => TripsPage());
+              var controller = Get.put(NavigationController());
+              controller.selectedIndex = 4;
+            } else {
+              showInfoSnackBar(
+                'حدث خطأ',
+                data['message'],
+              ).show(context);
+              return;
+            }
+          } else {
+            CacheHelper.getData(key: 'role') == "customer"
+                ? Get.offAll(() => const MainPage())
+                : Get.offAll(() => TripsPage());
+            saveUserInfo(data);
+          }
+        } else {
+          showInfoSnackBar(
+            'حدث خطأ',
+            data['message'],
+          ).show(context);
+          return;
         }
       } else {
         if (data['message'] is String) {
@@ -223,8 +253,7 @@ class AuthController extends GetxController {
   Future logout(context) async {
     try {
       final response = await http.post(
-        Uri.parse(
-            'https://62.72.13.145:8090/preview/alwasit.com/api/auth/logout'),
+        Uri.parse('${Constans.kBaseUrl}/auth/logout'),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer ${CacheHelper.getData(key: 'token')}'
@@ -265,6 +294,15 @@ class AuthController extends GetxController {
           'address_id': addressId
         },
       );
+      print({
+        'name': userName,
+        'location_details': locationDetails,
+        'longitude': longitude,
+        'latitude': latitude,
+        'start_time': startTime,
+        'end_time': endTime,
+        'address_id': addressId
+      });
 
       final data = jsonDecode(response.body);
       if (response.statusCode == 200 && data['success'] == true) {
@@ -273,7 +311,6 @@ class AuthController extends GetxController {
             .show(context);
         isUpdateProfile = false;
         update();
-        Get.offAll(() => MainPage());
         updateUserInfo(data);
       } else {
         showErrorSnackBar('خطأ', data['message']).show(context);
@@ -288,6 +325,16 @@ class AuthController extends GetxController {
       isUpdateProfile = false;
       update();
     }
+  }
+
+  void getUserInfo() {
+    userName = CacheHelper.getData(key: 'name');
+    longitude = CacheHelper.getData(key: 'longitude');
+    latitude = CacheHelper.getData(key: 'latitude');
+    locationDetails = CacheHelper.getData(key: 'location_details');
+    addressId = CacheHelper.getData(key: 'address_id');
+    startTime = CacheHelper.getData(key: 'start_time');
+    endTime = CacheHelper.getData(key: 'end_time');
   }
 
   @override
