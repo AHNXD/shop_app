@@ -13,17 +13,21 @@ import 'package:shop_app/views/auth_pages/login_page/login_page.dart';
 import 'package:shop_app/views/salesman_app/trip_page/trips_page.dart';
 
 class AuthController extends GetxController {
+  bool isgetLocation = false;
   Future<bool> locationService() async {
     Location location = Location();
 
     bool serviceEnabled;
     PermissionStatus permissionGranted;
     LocationData locationData;
-
+    isgetLocation = true;
+    update();
     serviceEnabled = await location.serviceEnabled();
     if (!serviceEnabled) {
       serviceEnabled = await location.requestService();
       if (!serviceEnabled) {
+        isgetLocation = false;
+        update();
         return false;
       }
     }
@@ -32,6 +36,8 @@ class AuthController extends GetxController {
     if (permissionGranted == PermissionStatus.denied) {
       permissionGranted = await location.requestPermission();
       if (permissionGranted != PermissionStatus.granted) {
+        isgetLocation = false;
+        update();
         return false;
       }
     }
@@ -41,6 +47,8 @@ class AuthController extends GetxController {
     debugPrint('longitude: ${longitude}');
     latitude = locationData.latitude.toString();
     debugPrint('latitude: ${latitude}');
+    isgetLocation = false;
+    update();
     return true;
   }
 
@@ -179,41 +187,7 @@ class AuthController extends GetxController {
           CacheHelper.getData(key: 'role') == "customer"
               ? Get.offAll(() => const MainPage())
               : Get.offAll(() => TripsPage());
-          CacheHelper.setString(
-              key: 'id', value: data['data']['user']['id'].toString());
-          CacheHelper.setString(
-              key: 'name', value: data['data']['user']['name']);
-          CacheHelper.setString(
-              key: 'contact', value: data['data']['user']['contact']);
-          CacheHelper.setString(
-              key: 'longitude',
-              value: data['data']['user']['longitude'].toString());
-          CacheHelper.setString(
-              key: 'latitude',
-              value: data['data']['user']['latitude'].toString());
-          if (CacheHelper.getData(key: 'role') == 'customer') {
-            CacheHelper.setString(
-                key: 'location_details',
-                value: data['data']['user']['location_details'].toString());
-            CacheHelper.setString(
-                key: 'token', value: data['data']['access_token']);
-            CacheHelper.setString(
-                key: 'address_id',
-                value: data['data']['user']['address']['id'].toString());
-            CacheHelper.setString(
-                key: 'address_name',
-                value: data['data']['user']['address']['name']);
-            CacheHelper.setString(
-                key: 'city_id',
-                value:
-                    data['data']['user']['address']['city']['id'].toString());
-            CacheHelper.setString(
-                key: 'city_name',
-                value: data['data']['user']['address']['city']['name']);
-          } else {
-            CacheHelper.setString(
-                key: 'token', value: data['data']['access_token']);
-          }
+          saveUserInfo(data);
         }
       } else {
         if (data['message'] is String) {
@@ -269,11 +243,121 @@ class AuthController extends GetxController {
     }
   }
 
+  bool isUpdateProfile = false;
+  Future<void> updateUserProfile(
+    BuildContext context,
+  ) async {
+    try {
+      isUpdateProfile = true;
+      update();
+      final response = await http.put(
+        Uri.parse('${Constans.kBaseUrl}customers'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${CacheHelper.getData(key: 'token')}',
+        },
+        body: {
+          'name': userName,
+          'location_details': locationDetails,
+          'longitude': longitude,
+          'latitude': latitude,
+          'start_time': startTime,
+          'end_time': endTime,
+          'address_id': addressId
+        },
+      );
+
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200 && data['success'] == true) {
+        CacheHelper.setString(key: 'role', value: data['data']['role']);
+        showSuccesSnackBar('تم تعديل المعلومات بنجاح', data['message'])
+            .show(context);
+        isUpdateProfile = false;
+        update();
+        Get.offAll(() => MainPage());
+        updateUserInfo(data);
+      } else {
+        showErrorSnackBar('خطأ', data['message']).show(context);
+        isUpdateProfile = false;
+        update();
+      }
+    } catch (e) {
+      debugPrint('Error updating profile: $e');
+      showErrorSnackBar(
+              'خطأ', 'حدث خطأ اثناء تعديل الملف الشخصي الرجاء المحاولة لاحقا')
+          .show(context);
+      isUpdateProfile = false;
+      update();
+    }
+  }
+
   @override
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await getAllCities(Get.context);
     });
+  }
+
+  updateUserInfo(data) {
+    CacheHelper.setString(key: 'id', value: data['data']['id'].toString());
+    CacheHelper.setString(key: 'name', value: data['data']['name']);
+    CacheHelper.setString(key: 'contact', value: data['data']['contact']);
+    CacheHelper.setString(
+        key: 'longitude', value: data['data']['longitude'].toString());
+    CacheHelper.setString(
+        key: 'latitude', value: data['data']['latitude'].toString());
+    if (CacheHelper.getData(key: 'role') == 'customer') {
+      CacheHelper.setString(
+          key: 'location_details',
+          value: data['data']['location_details'].toString());
+      CacheHelper.setString(
+          key: 'address_id', value: data['data']['address']['id'].toString());
+      CacheHelper.setString(
+          key: 'address_name', value: data['data']['address']['name']);
+      CacheHelper.setString(
+          key: 'city_id',
+          value: data['data']['address']['city']['id'].toString());
+      CacheHelper.setString(
+          key: 'city_name', value: data['data']['address']['city']['name']);
+      CacheHelper.setString(
+          key: 'start_time', value: data['data']['start_time']);
+      CacheHelper.setString(key: 'end_time', value: data['data']['end_time']);
+    }
+  }
+
+  saveUserInfo(data) {
+    CacheHelper.setString(
+        key: 'id', value: data['data']['user']['id'].toString());
+    CacheHelper.setString(key: 'name', value: data['data']['user']['name']);
+    CacheHelper.setString(
+        key: 'contact', value: data['data']['user']['contact']);
+    CacheHelper.setString(
+        key: 'longitude', value: data['data']['user']['longitude'].toString());
+    CacheHelper.setString(
+        key: 'latitude', value: data['data']['user']['latitude'].toString());
+    if (CacheHelper.getData(key: 'role') == 'customer') {
+      CacheHelper.setString(
+          key: 'location_details',
+          value: data['data']['user']['location_details'].toString());
+      CacheHelper.setString(key: 'token', value: data['data']['access_token']);
+      CacheHelper.setString(
+          key: 'address_id',
+          value: data['data']['user']['address']['id'].toString());
+      CacheHelper.setString(
+          key: 'address_name', value: data['data']['user']['address']['name']);
+      CacheHelper.setString(
+          key: 'city_id',
+          value: data['data']['user']['address']['city']['id'].toString());
+      CacheHelper.setString(
+          key: 'city_name',
+          value: data['data']['user']['address']['city']['name']);
+      CacheHelper.setString(
+          key: 'start_time', value: data['data']['user']['start_time']);
+      CacheHelper.setString(
+          key: 'end_time', value: data['data']['user']['end_time']);
+    } else {
+      CacheHelper.setString(key: 'token', value: data['data']['access_token']);
+    }
   }
 }

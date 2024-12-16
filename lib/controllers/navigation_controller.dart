@@ -4,12 +4,15 @@ import 'package:shop_app/views/home_page/home_page.dart';
 import 'package:shop_app/views/invoices_page/invoices_page.dart';
 import 'package:shop_app/views/order_page/order_page.dart';
 
+import '../views/profile_page/profile.dart';
+
 class NavigationController extends GetxController {
   int selectedIndex = 0;
   List screens = [
-     HomePage(),
+    HomePage(),
     OrderPage(),
     InvoicesPage(),
-    CartPage()
+    CartPage(),
+    Profile()
   ];
 }

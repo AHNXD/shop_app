@@ -33,8 +33,18 @@ class CustomNavigationBar extends StatelessWidget {
             index: 1,
             image: Assets.assetsImagesOrder2,
           ),
-          NavBarItem(index: 2, image: Assets.assetsImagesInvoicesIcon),
-          NavBarItem(index: 3, image: Assets.assetsImagesCartIcon),
+          NavBarItem(
+            index: 2,
+            image: Assets.assetsImagesInvoicesIcon,
+          ),
+          NavBarItem(
+            index: 3,
+            image: Assets.assetsImagesCartIcon,
+          ),
+          NavBarItem(
+            index: 4,
+            image: Assets.assetsImagesProfile,
+          ),
         ],
       ),
     );

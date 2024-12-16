@@ -10,7 +10,7 @@ import 'package:shop_app/views/auth_pages/register_page/widgets/city_info_sectio
 import 'package:shop_app/widgets/custom_pass_text_field.dart';
 import 'package:shop_app/widgets/custom_text_field.dart';
 
-import '../../../../widgets/custom_time_picker_text_field.dart';
+import '../../../../utils/avalible_time.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({
@@ -188,9 +188,56 @@ class _RegisterFormState extends State<RegisterForm> {
                   ? null
                   : () async {
                       if (formKey.currentState!.validate()) {
-                        chooseAvailableTime(context,
-                            fromTimeController: fromTimeController,
-                            toTimeController: toTimeController);
+                        AvalibleTime.chooseAvailableTime(
+                          context,
+                          fromTimeController: fromTimeController,
+                          toTimeController: toTimeController,
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text(
+                                "إلغاء",
+                                style: TextStyle(
+                                    color: Constans.kMainColor,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                if (fromTimeController.text.isEmpty ||
+                                    toTimeController.text.isEmpty) {
+                                  showErrorSnackBar(
+                                    "خطأ",
+                                    "الرجاء تحديد التاريخ والوقت",
+                                  );
+                                } else {
+                                  controller.startTime =
+                                      fromTimeController.text;
+                                  controller.endTime = toTimeController.text;
+                                  Navigator.pop(context);
+                                  try {
+                                    isLoading = true;
+                                    setState(() {});
+                                    await handelRegisterStatus();
+                                    // Get.to(RegisterPage());
+                                    isLoading = false;
+                                    setState(() {});
+                                  } on Exception catch (e) {
+                                    debugPrint('e: ${e}');
+                                    isLoading = false;
+                                    setState(() {});
+                                  }
+                                }
+                              },
+                              child: const Text(
+                                "تأكيد",
+                                style: TextStyle(
+                                    color: Constans.kMainColor,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        );
                       }
                     },
               title: isLoading
@@ -219,83 +266,6 @@ class _RegisterFormState extends State<RegisterForm> {
           ],
         ),
       ),
-    );
-  }
-
-  Future<dynamic> chooseAvailableTime(BuildContext context,
-      {required TextEditingController fromTimeController,
-      required TextEditingController toTimeController}) {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          titleTextStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 17,
-              fontFamily: Constans.kFontFamily,
-              fontWeight: FontWeight.bold),
-          title: const Text(
-            "الرجاء اختيار الوقت المتاح لإستلام طلباتك",
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CoustmTimePickerTextField(
-                labelText: "من الساعة",
-                timeController: fromTimeController,
-              ),
-              SizedBox(height: 16),
-              CoustmTimePickerTextField(
-                labelText: "الى الساعة",
-                timeController: toTimeController,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text(
-                "إلغاء",
-                style: TextStyle(
-                    color: Constans.kMainColor, fontWeight: FontWeight.bold),
-              ),
-            ),
-            TextButton(
-              onPressed: () async {
-                if (fromTimeController.text.isEmpty ||
-                    toTimeController.text.isEmpty) {
-                  showErrorSnackBar(
-                    "خطأ",
-                    "الرجاء تحديد التاريخ والوقت",
-                  );
-                } else {
-                  controller.startTime = fromTimeController.text;
-                  controller.endTime = toTimeController.text;
-                  Navigator.pop(context);
-                  try {
-                    isLoading = true;
-                    setState(() {});
-                    await handelRegisterStatus();
-                    // Get.to(RegisterPage());
-                    isLoading = false;
-                    setState(() {});
-                  } on Exception catch (e) {
-                    debugPrint('e: ${e}');
-                    isLoading = false;
-                    setState(() {});
-                  }
-                }
-              },
-              child: const Text(
-                "تأكيد",
-                style: TextStyle(
-                    color: Constans.kMainColor, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
-        );
-      },
     );
   }
 

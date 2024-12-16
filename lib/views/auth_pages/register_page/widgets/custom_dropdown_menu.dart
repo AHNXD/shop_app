@@ -8,12 +8,14 @@ class CustomDropDown extends StatelessWidget {
       required this.label,
       required this.prefixIcon,
       required this.items,
-      this.onChanged});
+      this.onChanged,
+      this.initialValue});
   final List<dynamic> items;
   var selectedValue = '';
   List<dynamic> drop = [];
   final String label;
   final Icon prefixIcon;
+  final String? initialValue;
   final void Function(Object?)? onChanged;
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class CustomDropDown extends StatelessWidget {
           color: Colors.black,
           fontFamily: Constans.kFontFamily),
       elevation: 0,
-      value: selectedValue.toString(),
+      value: initialValue ?? (items.isNotEmpty ? selectedValue : null),
       icon: const Icon(
         Icons.arrow_drop_down_circle,
         color: Color(0xFF1C3132),

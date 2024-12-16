@@ -24,6 +24,9 @@ class CustomTextField extends StatelessWidget {
     this.suffixIcon,
     this.isPhoneNumber,
     this.isLocation,
+    this.controller,
+    this.isEnabel,
+    this.onTap,
   });
   final TextStyle textStyle;
   final Color cursorColor;
@@ -43,10 +46,16 @@ class CustomTextField extends StatelessWidget {
   final bool? isExplaination;
   final TextInputType keyboardType;
   final FloatingLabelBehavior? floatingLabelBehavior;
+  final TextEditingController? controller;
   final void Function(String)? onChanged;
+  final void Function()? onTap;
+  final bool? isEnabel;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onTap: onTap,
+      controller: controller,
+      enabled: isEnabel,
       keyboardType: keyboardType,
       onChanged: onChanged,
       validator: (value) {
@@ -60,8 +69,7 @@ class CustomTextField extends StatelessWidget {
           return FormValidators().priceValidator(value);
         } else if (isExplaination ?? false) {
           return FormValidators().explainationValidator(value);
-        }
-        else if (isLocation ?? false) {
+        } else if (isLocation ?? false) {
           return FormValidators().locationDetailsValidator(value);
         }
         return null;
