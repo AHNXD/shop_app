@@ -13,6 +13,6 @@ class NavigationController extends GetxController {
     OrderPage(),
     InvoicesPage(),
     CartPage(),
-    Profile()
+    ProfilePage()
   ];
 }

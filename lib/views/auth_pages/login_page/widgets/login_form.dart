@@ -66,7 +66,9 @@ class _LoginFormState extends State<LoginForm> {
           ),
           CustomButton(
             height: 60,
-            onTap: isLoading
+            onTap: isLoading ||
+                    controller.isgetLocation ||
+                    controller.isUpdateProfile
                 ? null
                 : () async {
                     if (formKey.currentState!.validate()) {
@@ -83,7 +85,9 @@ class _LoginFormState extends State<LoginForm> {
                     setState(() {});
                     // List<CityModel> cities = await controller.getAllCities();
                   },
-            title: isLoading
+            title: isLoading ||
+                    controller.isgetLocation ||
+                    controller.isUpdateProfile
                 ? const Center(
                     child: CircularProgressIndicator(
                       color: Colors.white,

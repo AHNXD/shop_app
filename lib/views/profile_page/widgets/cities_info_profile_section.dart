@@ -34,6 +34,7 @@ class _CitiesInfoProfileSectionState extends State<CitiesInfoProfileSection> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AuthController>(
+      init: AuthController(),
       builder: (controller) {
         if (controller.citiesError) {
           return SizedBox();

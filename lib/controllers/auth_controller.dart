@@ -6,12 +6,12 @@ import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app/constans.dart';
-import 'package:shop_app/controllers/navigation_controller.dart';
 import 'package:shop_app/helper/cache_helper.dart';
 import 'package:shop_app/helper/custom_snack_bar.dart';
 import 'package:shop_app/main_page.dart';
 import 'package:shop_app/models/city_model.dart';
 import 'package:shop_app/views/auth_pages/login_page/login_page.dart';
+import 'package:shop_app/views/profile_page/profile.dart';
 import 'package:shop_app/views/salesman_app/trip_page/trips_page.dart';
 
 class AuthController extends GetxController {
@@ -64,7 +64,7 @@ class AuthController extends GetxController {
     try {
       citiesError = false;
       citiesLoading = true;
-      cities = [];
+      cities.clear();
       update();
       final response = await http.get(
           Uri.parse(
@@ -192,12 +192,22 @@ class AuthController extends GetxController {
               data['data']['user']['latitude'] = latitude;
               saveUserInfo(data);
               getUserInfo();
-              updateUserProfile(context);
-              CacheHelper.getData(key: 'role') == "customer"
-                  ? Get.offAll(() => const MainPage())
-                  : Get.offAll(() => TripsPage());
-              // var controller = Get.put(NavigationController());
-              // controller.selectedIndex = 4;
+              await updateUserProfile(context: context, isFromLogin: true);
+              if (CacheHelper.getData(key: 'role') == "customer") {
+                Get.offAll(() => ProfilePage());
+                Get.showSnackbar(GetSnackBar(
+                  backgroundColor: Colors.green,
+                  borderRadius: 8,
+                  forwardAnimationCurve: Curves.bounceIn,
+                  messageText: Text(
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w600),
+                      'الرجاءالتاكد من المعلومات الشخصية,  ثم قم بحفظ التغيرات'),
+                  duration: Duration(seconds: 3),
+                ));
+              } else {
+                Get.offAll(() => TripsPage());
+              }
             } else {
               showInfoSnackBar(
                 'حدث خطأ',
@@ -205,6 +215,7 @@ class AuthController extends GetxController {
               ).show(context);
               return;
             }
+            //  saveUserInfo(data);
           } else {
             CacheHelper.getData(key: 'role') == "customer"
                 ? Get.offAll(() => const MainPage())
@@ -273,8 +284,7 @@ class AuthController extends GetxController {
 
   bool isUpdateProfile = false;
   Future<void> updateUserProfile(
-    BuildContext context,
-  ) async {
+      {required BuildContext context, bool? isFromLogin}) async {
     try {
       isUpdateProfile = true;
       update();
@@ -299,10 +309,12 @@ class AuthController extends GetxController {
       final data = jsonDecode(response.body);
       if (response.statusCode == 200 && data['success'] == true) {
         CacheHelper.setString(key: 'role', value: data['data']['role']);
-        showSuccesSnackBar('تم تعديل المعلومات بنجاح', data['message'])
-            .show(context);
+        isFromLogin ??
+            showSuccesSnackBar('تم تعديل المعلومات بنجاح', data['message'])
+                .show(context);
         isUpdateProfile = false;
         update();
+        Get.offAll(() => MainPage());
         updateUserInfo(data);
       } else {
         showErrorSnackBar('خطأ', data['message']).show(context);

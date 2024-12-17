@@ -11,14 +11,14 @@ import '../../constans.dart';
 import '../auth_pages/login_page/widgets/custom_button.dart';
 import 'widgets/cities_info_profile_section.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({super.key});
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
 
   @override
-  _ProfileState createState() => _ProfileState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfilePageState extends State<ProfilePage> {
   final _formKey = GlobalKey<FormState>();
   final AuthController _authController = Get.put(AuthController());
 
@@ -30,7 +30,9 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    _authController.getAllCities(context);
+    // _authController.cities.isEmpty
+    //     ? _authController.getAllCities(context)
+    //     : null;
     nameController = TextEditingController(
       text: CacheHelper.getData(key: 'name') ?? '',
     );
@@ -71,7 +73,7 @@ class _ProfileState extends State<Profile> {
         log(_authController.locationDetails);
         log(_authController.addressId);
         _authController.updateUserProfile(
-          context,
+          context: context,
         );
       } else {
         Get.showSnackbar(GetSnackBar(
@@ -217,11 +219,13 @@ class _ProfileState extends State<Profile> {
                 ),
                 const SizedBox(height: 35),
                 GetBuilder<AuthController>(
-                  init: AuthController(),
                   builder: (controller) {
                     return CustomButton(
                       height: 55,
-                      onTap: _saveProfile,
+                      onTap:
+                          controller.isgetLocation || controller.isUpdateProfile
+                              ? null
+                              : _saveProfile,
                       title:
                           controller.isUpdateProfile || controller.isgetLocation
                               ? Center(

@@ -19,7 +19,7 @@ class CustomDropDown extends StatelessWidget {
   final void Function(Object?)? onChanged;
   @override
   Widget build(BuildContext context) {
-    selectedValue = items[0].name;
+    //selectedValue = items[0].name;
     drop = items;
     return DropdownButtonFormField(
       padding: const EdgeInsets.all(0),
@@ -30,7 +30,7 @@ class CustomDropDown extends StatelessWidget {
           color: Colors.black,
           fontFamily: Constans.kFontFamily),
       elevation: 0,
-      value: initialValue ?? (items.isNotEmpty ? selectedValue : null),
+      value: initialValue ?? (items.isNotEmpty ? items.first.name : null),
       icon: const Icon(
         Icons.arrow_drop_down_circle,
         color: Color(0xFF1C3132),
