@@ -122,7 +122,8 @@ class AuthController extends GetxController {
         'longitude': longitude,
         'latitude': latitude,
         'start_time': startTime,
-        'end_time': endTime
+        'end_time': endTime,
+        'device_token': CacheHelper.getData(key: "fcm_token")
       });
       request.headers.addAll(headers);
       http.StreamedResponse response = await request.send();

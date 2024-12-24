@@ -153,10 +153,6 @@ class FirebaseApi {
 
   Future<void> initNotifications() async {
     //await _firebaseMessaging.requestPermission();
-    // String? userType = CacheHelper.getData(key: "userType");
-    // if (userType != null) {
-    //   await _firebaseMessaging.subscribeToTopic(userType);
-    // }
     //await saveToken();
     await requestNotificationPermission();
     await initPushNotifications();
