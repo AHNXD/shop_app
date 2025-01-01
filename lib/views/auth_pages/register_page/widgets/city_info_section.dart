@@ -26,6 +26,7 @@ class _CityInfoSectionState extends State<CityInfoSection> {
               for (var i = 0; i < controller.cities.length; i++) {
                 if (controller.cities[i].name == val) {
                   selectedIndex = i;
+                  controller.addressId = "";
                   debugPrint('selectedCity: ${val}');
                   setState(() {});
                 }

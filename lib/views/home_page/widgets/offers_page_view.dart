@@ -82,40 +82,43 @@ class _OffersPageViewState extends State<OffersPageView> {
                     style: TextStyle(fontFamily: Constans.kFontFamily),
                   ),
                 )
-              :homePageController.adsList.isEmpty?
-              Center(
-                  child: Text(
-                    "لايوجد اي اعلانات لعرضها",
-                    style: TextStyle(fontFamily: Constans.kFontFamily),
-                  ),
-                )
-               :PageView.builder(
-                  controller: widget.dotPageController,
-                  itemCount: homePageController.adsList.isEmpty
-                      ? 0
-                      : homePageController.adsList.length,
-                  itemBuilder: (context, index) {
-                    return Stack(
-                      children: [
-                        CachedNetworkImage(
-                          imageUrl:
-                              "${Constans.kImageBaseUrl}${homePageController.adsList[index].image}",
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
+              : homePageController.adsList.isEmpty
+                  ? Center(
+                      child: Text(
+                        "لايوجد اي اعلانات لعرضها",
+                        style: TextStyle(fontFamily: Constans.kFontFamily),
+                      ),
+                    )
+                  : PageView.builder(
+                      controller: widget.dotPageController,
+                      itemCount: homePageController.adsList.isEmpty
+                          ? 0
+                          : homePageController.adsList.length,
+                      itemBuilder: (context, index) {
+                        return Stack(
+                          children: [
+                            CachedNetworkImage(
+                              imageUrl:
+                                  "${Constans.kImageBaseUrl}${homePageController.adsList[index].image}",
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
+                              placeholder: (context, url) => Center(
+                                  child: const CircularProgressIndicator(
+                                color: Constans.kMainColor,
+                              )),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
                             ),
-                          ),
-                          placeholder: (context, url) =>
-                              const CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                        ),
-                      ],
-                    );
-                  }));
+                          ],
+                        );
+                      }));
     });
   }
 }

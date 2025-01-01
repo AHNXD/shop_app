@@ -188,56 +188,50 @@ class _RegisterFormState extends State<RegisterForm> {
                   ? null
                   : () async {
                       if (formKey.currentState!.validate()) {
-                        AvalibleTime.chooseAvailableTime(
-                          context,
-                          fromTimeController: fromTimeController,
-                          toTimeController: toTimeController,
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text(
-                                "إلغاء",
-                                style: TextStyle(
-                                    color: Constans.kMainColor,
-                                    fontWeight: FontWeight.bold),
+                        if (fromTimeController.text.isEmpty ||
+                            toTimeController.text.isEmpty) {
+                          AvalibleTime.chooseAvailableTime(
+                            context,
+                            fromTimeController: fromTimeController,
+                            toTimeController: toTimeController,
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text(
+                                  "إلغاء",
+                                  style: TextStyle(
+                                      color: Constans.kMainColor,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                if (fromTimeController.text.isEmpty ||
-                                    toTimeController.text.isEmpty) {
-                                  showErrorSnackBar(
-                                    "خطأ",
-                                    "الرجاء تحديد التاريخ والوقت",
-                                  );
-                                } else {
-                                  controller.startTime =
-                                      fromTimeController.text;
-                                  controller.endTime = toTimeController.text;
-                                  Navigator.pop(context);
-                                  try {
-                                    isLoading = true;
-                                    setState(() {});
-                                    await handelRegisterStatus();
-                                    // Get.to(RegisterPage());
-                                    isLoading = false;
-                                    setState(() {});
-                                  } on Exception catch (e) {
-                                    debugPrint('e: ${e}');
-                                    isLoading = false;
-                                    setState(() {});
+                              TextButton(
+                                onPressed: () async {
+                                  if (fromTimeController.text.isEmpty ||
+                                      toTimeController.text.isEmpty) {
+                                    showErrorSnackBar(
+                                      "خطأ",
+                                      "الرجاء تحديد التاريخ والوقت",
+                                    );
+                                  } else {
+                                    controller.startTime =
+                                        fromTimeController.text;
+                                    controller.endTime = toTimeController.text;
+                                    Navigator.pop(context);
+                                    await startRegister();
                                   }
-                                }
-                              },
-                              child: const Text(
-                                "تأكيد",
-                                style: TextStyle(
-                                    color: Constans.kMainColor,
-                                    fontWeight: FontWeight.bold),
+                                },
+                                child: const Text(
+                                  "تأكيد",
+                                  style: TextStyle(
+                                      color: Constans.kMainColor,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
-                            ),
-                          ],
-                        );
+                            ],
+                          );
+                        } else {
+                          await startRegister();
+                        }
                       }
                     },
               title: isLoading
@@ -269,19 +263,45 @@ class _RegisterFormState extends State<RegisterForm> {
     );
   }
 
+  Future<void> startRegister() async {
+    try {
+      isLoading = true;
+      setState(() {});
+      await handelRegisterStatus();
+      // Get.to(RegisterPage());
+      isLoading = false;
+      setState(() {});
+    } on Exception catch (e) {
+      debugPrint('e: ${e}');
+      isLoading = false;
+      setState(() {});
+    }
+  }
+
   Future<void> handelRegisterStatus() async {
     if (formKey.currentState!.validate()) {
-      var locationStatus = await controller.locationService();
-      if (locationStatus) {
-        debugPrint('${controller.longitude} ${controller.latitude}');
-        await controller.registerUser(context);
-        setState(() {
-          isLoading = false;
-        });
+      if (controller.addressId.isEmpty || controller.addressId == "") {
+        Get.showSnackbar(GetSnackBar(
+          backgroundColor: Colors.red,
+          messageText: Text(
+              style: TextStyle(color: Colors.white),
+              "الرجاء اختيار محافظة ومنطقة للمتابعة"),
+          duration: Duration(seconds: 3),
+        ));
       } else {
-        showErrorSnackBar('لايمكن التسجيل بدون السماح بالوصول لصلاحيات الموقع',
-                'الرجاء الدخول الى اعدادات التطبيق والسماح باذونات الوصول للموقع')
-            .show(context);
+        var locationStatus = await controller.locationService();
+        if (locationStatus) {
+          debugPrint('${controller.longitude} ${controller.latitude}');
+          await controller.registerUser(context);
+          setState(() {
+            isLoading = false;
+          });
+        } else {
+          showErrorSnackBar(
+                  'لايمكن التسجيل بدون السماح بالوصول لصلاحيات الموقع',
+                  'الرجاء الدخول الى اعدادات التطبيق والسماح باذونات الوصول للموقع')
+              .show(context);
+        }
       }
     } else {
       setState(() {

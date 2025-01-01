@@ -28,11 +28,11 @@ class AllCompaniesPage extends StatelessWidget {
             init: CompaniesController(),
             builder: (companyController) {
               if (companyController.companiesError) {
-                return Text('فشل في تحميل الشركات');
+                return Center(child: Text('فشل في تحميل الشركات'));
               }
               if (companyController.companiesList.isEmpty &&
                   !companyController.companiesLoading) {
-                return Text('لا يوجد شركات لعرضها');
+                return Center(child: Text('لا يوجد شركات لعرضها'));
               }
               return AllCompaniesGridView(
                 companyController: companyController,
