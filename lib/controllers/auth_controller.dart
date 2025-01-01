@@ -178,22 +178,28 @@ class AuthController extends GetxController {
       http.StreamedResponse response, data, context) async {
     try {
       if (response.statusCode == 200) {
-        CacheHelper.setString(key: 'role', value: data['data']['user']['role']);
-        debugPrint('userInfo.getString: ${CacheHelper.getData(key: 'role')}');
+        String role = data['data']['user']['role'];
+        CacheHelper.setString(key: 'role', value: role);
+        debugPrint('userInfo.getString: ${role}');
         if (data['success'] == true) {
-          if ((data['data']['user']['longitude'] ?? "") == "" &&
-              (data['data']['user']['latitude'] ?? "") == "") {
-            showInfoSnackBar(
-              'الرجاء الإنتظار يتم تحديث الموقع',
-              data['message'],
-            ).show(context);
-            bool result = await locationService();
-            if (result) {
-              data['data']['user']['longitude'] = longitude;
-              data['data']['user']['latitude'] = latitude;
-              saveUserInfo(data);
-              getUserInfo();
-              await updateUserProfile(context: context, isFromLogin: true);
+          if (role == "customer") {
+            if ((data['data']['user']['longitude'] ?? "") == "" &&
+                (data['data']['user']['latitude'] ?? "") == "") {
+              showInfoSnackBar(
+                'الرجاء الإنتظار يتم تحديث الموقع',
+                data['message'],
+              ).show(context);
+              bool result = await locationService();
+              if (result) {
+                data['data']['user']['longitude'] = longitude;
+                data['data']['user']['latitude'] = latitude;
+                saveUserInfo(data);
+                getUserInfo();
+                await updateUserProfile(context: context, isFromLogin: true);
+              } else {
+                saveUserInfo(data);
+              }
+
               if (CacheHelper.getData(key: 'role') == "customer") {
                 Get.offAll(() => ProfilePage());
                 Get.showSnackbar(GetSnackBar(
