@@ -31,8 +31,10 @@ class AllCompaniesCard extends StatelessWidget {
                 ),
               ),
             ),
-            placeholder: (context, url) => const CircularProgressIndicator(
-              color: Colors.white,
+            placeholder: (context, url) => Center(
+              child: const CircularProgressIndicator(
+                color: Constans.kMainColor,
+              ),
             ),
             errorWidget: (context, url, error) =>
                 const Icon(Icons.wifi_tethering_error_rounded_sharp),

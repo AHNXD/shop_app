@@ -27,7 +27,7 @@ class OrderDetailsPage extends StatelessWidget {
           backgroundColor: Constans.kMainColor,
           centerTitle: true,
           title: Text(
-            "تفاصيل الطلب #${model.id}",
+            "تفاصيل الطلب #${model.orderNumber}",
             style: style(),
           ),
         ),

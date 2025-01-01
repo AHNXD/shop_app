@@ -136,7 +136,7 @@ class _OrderCardState extends State<OrderCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "رقم الطلب : ${widget.model.id}",
+                    "رقم الطلب : ${widget.model.orderNumber}",
                     style: TextStyle(
                         fontSize: 14,
                         color: Colors.black.withOpacity(.2),
@@ -180,11 +180,9 @@ class _OrderCardState extends State<OrderCard> {
                               });
                               var data = widget.isArchived
                                   ? await controller.showArchiveOrder(
-                                      widget.model.orderNumber.toString(),
-                                      context)
+                                      widget.model.id.toString(), context)
                                   : await controller.showOrder(
-                                      widget.model.orderNumber.toString(),
-                                      context);
+                                      widget.model.id.toString(), context);
                               setState(() {
                                 isLoading = false;
                               });
