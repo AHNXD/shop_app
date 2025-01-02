@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
+        locale: Locale("ar", ""),
         home: SplashView(),
       ),
     );

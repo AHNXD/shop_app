@@ -178,45 +178,43 @@ class AuthController extends GetxController {
       http.StreamedResponse response, data, context) async {
     try {
       if (response.statusCode == 200) {
-        String role = data['data']['user']['role'];
-        CacheHelper.setString(key: 'role', value: role);
-        debugPrint('userInfo.getString: ${role}');
         if (data['success']) {
+          String role = data['data']['user']['role'];
+          CacheHelper.setString(key: 'role', value: role);
+          debugPrint('userInfo.getString: ${role}');
+          await saveUserInfo(data);
           if (role == "customer") {
             if (data['data']['user']['longitude'] == null &&
                 data['data']['user']['latitude'] == null) {
-              showInfoSnackBar(
-                'الرجاء الإنتظار يتم تحديث الموقع',
-                data['message'],
-              ).show(context);
-              bool result = await locationService();
-              if (result) {
-                data['data']['user']['longitude'] = longitude;
-                data['data']['user']['latitude'] = latitude;
-                saveUserInfo(data);
-                getUserInfo();
-                await updateUserProfile(context: context, isFromLogin: true);
-                Get.offAll(() => ProfilePage());
-                Get.showSnackbar(GetSnackBar(
-                  backgroundColor: Colors.green,
-                  borderRadius: 8,
-                  forwardAnimationCurve: Curves.bounceIn,
-                  messageText: Text(
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w600),
-                      'الرجاءالتاكد من المعلومات الشخصية,  ثم قم بحفظ التغيرات'),
-                  duration: Duration(seconds: 3),
-                ));
-              } else {
-                saveUserInfo(data);
-                Get.offAll(() => TripsPage());
-              }
+              // showInfoSnackBar(
+              //   'الرجاء الإنتظار يتم تحديث الموقع',
+              //   data['message'],
+              // ).show(context);
+              Get.showSnackbar(GetSnackBar(
+                backgroundColor: Colors.green,
+                borderRadius: 8,
+                forwardAnimationCurve: Curves.bounceIn,
+                messageText: Text(
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w600),
+                    'الرجاءالتاكد من المعلومات الشخصية,  ثم قم بحفظ التغيرات'),
+                duration: Duration(seconds: 3),
+              ));
+              Get.offAll(() => ProfilePage());
+              // bool result = await locationService();
+              // if (result) {
+              //   data['data']['user']['longitude'] = longitude;
+              //   data['data']['user']['latitude'] = latitude;
+              //   getUserInfo();
+              //   await updateUserProfile(context: context, isFromLogin: true);
+              // } else {
+              //   saveUserInfo(data);
+              //   Get.offAll(() => TripsPage());
+              // }
             } else {
-              saveUserInfo(data);
               Get.offAll(() => const MainPage());
             }
           } else {
-            saveUserInfo(data);
             Get.offAll(() => TripsPage());
           }
         } else {
@@ -379,10 +377,15 @@ class AuthController extends GetxController {
     CacheHelper.setString(key: 'name', value: data['data']['user']['name']);
     CacheHelper.setString(
         key: 'contact', value: data['data']['user']['contact']);
-    CacheHelper.setString(
-        key: 'longitude', value: data['data']['user']['longitude'].toString());
-    CacheHelper.setString(
-        key: 'latitude', value: data['data']['user']['latitude'].toString());
+    if (data['data']['user']['longitude'] != null) {
+      CacheHelper.setString(
+          key: 'longitude',
+          value: data['data']['user']['longitude'].toString());
+    }
+    if (data['data']['user']['latitude'] != null) {
+      CacheHelper.setString(
+          key: 'latitude', value: data['data']['user']['latitude'].toString());
+    }
     if (CacheHelper.getData(key: 'role') == 'customer') {
       CacheHelper.setString(
           key: 'location_details',
@@ -399,10 +402,14 @@ class AuthController extends GetxController {
       CacheHelper.setString(
           key: 'city_name',
           value: data['data']['user']['address']['city']['name']);
-      CacheHelper.setString(
-          key: 'start_time', value: data['data']['user']['start_time']);
-      CacheHelper.setString(
-          key: 'end_time', value: data['data']['user']['end_time']);
+      if (data['data']['user']['start_time'] != null) {
+        CacheHelper.setString(
+            key: 'start_time', value: data['data']['user']['start_time']);
+      }
+      if (data['data']['user']['end_time'] != null) {
+        CacheHelper.setString(
+            key: 'end_time', value: data['data']['user']['end_time']);
+      }
     } else {
       CacheHelper.setString(key: 'token', value: data['data']['access_token']);
     }

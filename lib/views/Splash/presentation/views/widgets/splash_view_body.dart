@@ -71,7 +71,9 @@ class _SplashViewbodyState extends State<SplashViewbody>
       () {
         CacheHelper.getData(key: 'hasFCMToken') == false
             ? Get.offAll(() => OnBoardingPage())
-            : CacheHelper.getData(key: 'token') == null
+            : CacheHelper.getData(key: 'token') == null ||
+                    (CacheHelper.getData(key: "longitude") == null &&
+                        CacheHelper.getData(key: "latitude") == null)
                 ? Get.offAll(() => LoginPage())
                 : CacheHelper.getData(key: 'role') == 'customer'
                     ? Get.offAll(() => MainPage())

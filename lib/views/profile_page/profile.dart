@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shop_app/controllers/auth_controller.dart';
 import 'package:shop_app/helper/cache_helper.dart';
+import 'package:shop_app/helper/custom_snack_bar.dart';
 import 'package:shop_app/utils/avalible_time.dart';
 import 'package:shop_app/widgets/custom_text_field.dart';
 
@@ -59,16 +60,10 @@ class _ProfilePageState extends State<ProfilePage> {
   void _saveProfile() async {
     if (_formKey.currentState!.validate()) {
       if (startTimeController.text.isEmpty || endTimeController.text.isEmpty) {
-        Get.showSnackbar(const GetSnackBar(
-          backgroundColor: Colors.red,
-          messageText: Text(
-            'يجب تحديد وقت البداية والنهاية لإستلام طلباتك.',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-            ),
-          ),
-        ));
+        showErrorSnackBar(
+          "خطأ",
+          'يجب تحديد وقت البداية والنهاية لإستلام طلباتك.',
+        );
         return;
       }
       var locationStatus = await _authController.locationService();
