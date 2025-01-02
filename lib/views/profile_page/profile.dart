@@ -58,6 +58,19 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _saveProfile() async {
     if (_formKey.currentState!.validate()) {
+      if (startTimeController.text.isEmpty || endTimeController.text.isEmpty) {
+        Get.showSnackbar(const GetSnackBar(
+          backgroundColor: Colors.red,
+          messageText: Text(
+            'يجب تحديد وقت البداية والنهاية لإستلام طلباتك.',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+            ),
+          ),
+        ));
+        return;
+      }
       var locationStatus = await _authController.locationService();
       if (locationStatus) {
         debugPrint('${_authController.longitude} ${_authController.latitude}');

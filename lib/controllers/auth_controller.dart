@@ -181,10 +181,10 @@ class AuthController extends GetxController {
         String role = data['data']['user']['role'];
         CacheHelper.setString(key: 'role', value: role);
         debugPrint('userInfo.getString: ${role}');
-        if (data['success'] == true) {
+        if (data['success']) {
           if (role == "customer") {
-            if ((data['data']['user']['longitude'] ?? "") == "" &&
-                (data['data']['user']['latitude'] ?? "") == "") {
+            if (data['data']['user']['longitude'] == null &&
+                data['data']['user']['latitude'] == null) {
               showInfoSnackBar(
                 'الرجاء الإنتظار يتم تحديث الموقع',
                 data['message'],
@@ -196,11 +196,6 @@ class AuthController extends GetxController {
                 saveUserInfo(data);
                 getUserInfo();
                 await updateUserProfile(context: context, isFromLogin: true);
-              } else {
-                saveUserInfo(data);
-              }
-
-              if (CacheHelper.getData(key: 'role') == "customer") {
                 Get.offAll(() => ProfilePage());
                 Get.showSnackbar(GetSnackBar(
                   backgroundColor: Colors.green,
@@ -213,21 +208,16 @@ class AuthController extends GetxController {
                   duration: Duration(seconds: 3),
                 ));
               } else {
+                saveUserInfo(data);
                 Get.offAll(() => TripsPage());
               }
             } else {
-              showInfoSnackBar(
-                'حدث خطأ',
-                data['message'],
-              ).show(context);
-              return;
+              saveUserInfo(data);
+              Get.offAll(() => const MainPage());
             }
-            //  saveUserInfo(data);
           } else {
-            CacheHelper.getData(key: 'role') == "customer"
-                ? Get.offAll(() => const MainPage())
-                : Get.offAll(() => TripsPage());
             saveUserInfo(data);
+            Get.offAll(() => TripsPage());
           }
         } else {
           showInfoSnackBar(
