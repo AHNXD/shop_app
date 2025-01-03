@@ -102,7 +102,7 @@ class FormValidators {
       if (value != null) {
         if (value.isEmpty) {
           return "حقل اجباري";
-        } else if (num.parse(value) <= 0) {
+        } else if (num.parse(value) < 0) {
           return "يجب ادخال مبلغ صالح";
         } else {
           return null;

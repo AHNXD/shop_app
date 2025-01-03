@@ -45,7 +45,7 @@ class _OrderCardState extends State<OrderCard> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -75,6 +75,8 @@ class _OrderCardState extends State<OrderCard> {
                           SizedBox(
                             width: MediaQuery.sizeOf(context).width * 0.2,
                             child: Text(
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               '${widget.model.totalPrice ?? 'طلب مرفوض'}${widget.model.totalPrice == null ? '' : 'ل.س'}',
                               style: TextStyle(
                                   fontSize: 14,
@@ -90,7 +92,7 @@ class _OrderCardState extends State<OrderCard> {
                   const SizedBox(
                     height: 20,
                   ),
-                  Row(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

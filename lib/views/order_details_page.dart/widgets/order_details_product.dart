@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:shop_app/models/order_model.dart';
 import 'package:shop_app/views/viewall_page/widgets/product_card.dart';
@@ -23,22 +22,19 @@ class OrderDetailsProducts extends StatelessWidget {
         ),
       ),
       child: GridView.builder(
-          gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: 0.7),
-          itemCount: model.products != null
-              ? model.products!.length
-              : 0,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              childAspectRatio: 0.7),
+          itemCount: model.products != null ? model.products!.length : 0,
           itemBuilder: (context, index) {
             return ProductCard(
+              isFromSalesMan: false,
               model: model.products![index],
               isOrderCard: true,
-              orderCompanyName: model.companyName ??
-                  model.archiveCompanyName ??
-                  '',
+              orderCompanyName:
+                  model.companyName ?? model.archiveCompanyName ?? '',
             );
           }),
     );

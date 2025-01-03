@@ -46,6 +46,7 @@ class _ProductGridViewState extends State<ProductGridView> {
           childrenDelegate: SliverChildBuilderDelegate(
             (context, index) => index < controller.productsList.length
                 ? ProductCard(
+                    isFromSalesMan: false,
                     model:
                         ProductModel.fromJson(controller.productsList[index]),
                     isOrderCard: false,

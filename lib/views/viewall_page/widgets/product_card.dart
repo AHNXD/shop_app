@@ -13,6 +13,7 @@ class ProductCard extends StatelessWidget {
     super.key,
     required this.model,
     required this.isOrderCard,
+    required this.isFromSalesMan,
     this.orderCompanyName,
   });
   final ProductModel model;
@@ -20,11 +21,12 @@ class ProductCard extends StatelessWidget {
   final controller = Get.put(CartController(), permanent: true);
   final bool isOrderCard;
   final String? orderCompanyName;
+  final bool isFromSalesMan;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => ProductDetails(product: model));
+        !isFromSalesMan ? Get.to(() => ProductDetails(product: model)) : null;
       },
       child: Stack(
         children: [

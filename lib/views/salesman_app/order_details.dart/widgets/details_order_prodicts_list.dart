@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:shop_app/models/salesman/order_details_model.dart';
 import 'package:shop_app/views/salesman_app/order_details.dart/salesman_archive_card.dart';
@@ -20,8 +19,7 @@ class DetailsOrderProductsList extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
       child: isArchive
           ? GridView.builder(
-              gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 mainAxisSpacing: 16,
                 crossAxisSpacing: 16,
@@ -36,15 +34,15 @@ class DetailsOrderProductsList extends StatelessWidget {
                 );
               })
           : GridView.builder(
-              gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
-                      childAspectRatio: 0.7),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  childAspectRatio: 0.7),
               itemCount: orderModel.products!.length,
               itemBuilder: (context, index) {
                 return ProductCard(
+                  isFromSalesMan: true,
                   model: orderModel.products![index],
                   isOrderCard: true,
                   orderCompanyName: '',
