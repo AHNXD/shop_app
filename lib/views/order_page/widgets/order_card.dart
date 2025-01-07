@@ -148,14 +148,24 @@ class _OrderCardState extends State<OrderCard> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Text(
-                    "${widget.model.explaination == null ? 'التاريخ' : "السبب"}: ${widget.model.orderDate ?? widget.model.date ?? widget.model.explaination}",
-                    style: TextStyle(
-                        color: Colors.black.withOpacity(.2),
-                        fontSize: 14,
-                        fontFamily: Constans.kFontFamily,
-                        fontWeight: FontWeight.bold),
-                  ),
+                  if (widget.model.explaination == null)
+                    Text(
+                      "${'التاريخ'}: ${widget.model.orderDate ?? widget.model.date ?? "لم يحدد بعد"}",
+                      style: TextStyle(
+                          color: Colors.black.withOpacity(.2),
+                          fontSize: 14,
+                          fontFamily: Constans.kFontFamily,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  if (widget.model.explaination != null)
+                    Text(
+                      "${"السبب"}: ${widget.model.explaination}",
+                      style: TextStyle(
+                          color: Colors.black.withOpacity(.2),
+                          fontSize: 14,
+                          fontFamily: Constans.kFontFamily,
+                          fontWeight: FontWeight.bold),
+                    ),
                   const SizedBox(
                     height: 10,
                   ),
