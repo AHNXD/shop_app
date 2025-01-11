@@ -48,13 +48,16 @@ class HomePage extends StatelessWidget {
         actions: [
           GestureDetector(
             onTap: () async {
-              String fcmToken = CacheHelper.getData(key:'fcm_token').toString();
-              bool firstUse = CacheHelper.getData(key: 'hasFCMToken') ?? true;
+              String fcmToken =
+                  CacheHelper.getData(key: 'fcm_token').toString();
+              bool hasFCMToken =
+                  CacheHelper.getData(key: 'hasFCMToken') ?? false;
               bool status = await controller.logout(context);
               if (status) {
                 CacheHelper.clearData();
                 CacheHelper.setString(key: 'fcm_token', value: fcmToken);
-                CacheHelper.setBool(key:'hasFCMToken',value: firstUse);
+                CacheHelper.setBool(key: 'hasFCMToken', value: hasFCMToken);
+                CacheHelper.setBool(key: 'firstTime', value: false);
 
                 Get.offAll(const LoginPage());
               } else {

@@ -84,49 +84,28 @@ class FirebaseApi {
     // Save the FCM token
     await saveToken();
   }
-  // Future initPushNotifications() async {
-  //   await FirebaseMessaging.instance
-  //       .setForegroundNotificationPresentationOptions(
-  //           alert: true, badge: true, sound: true);
-
-  //   FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
-  //   FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
-  //   FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
-  //   FirebaseMessaging.onMessage.listen((message) {
-  //     final notification = message.notification;
-  //     if (notification == null) return;
-  //     _localNotifications.show(
-  //       notification.hashCode,
-  //       notification.title,
-  //       notification.body,
-  //       NotificationDetails(
-  //         android: AndroidNotificationDetails(
-  //           _androidChannel.id,
-  //           _androidChannel.name,
-  //           channelDescription: _androidChannel.description,
-  //           icon: '@mipmap/ic_launcher',
-  //           autoCancel: true,
-  //         ),
-  //       ),
-  //       payload: jsonEncode(message.toMap()),
-  //     );
-  //   });
-  // }
 
   Future<void> saveToken() async {
-    final bool? hasToken = await CacheHelper.getData(key: "hasFCMToken");
-    log("hasFCMToken: ${hasToken.toString()}");
-    final fCMToken = Platform.isAndroid
-        ? await _firebaseMessaging.getToken()
-        : await _firebaseMessaging.getAPNSToken();
-    log("fCMToken: ${fCMToken.toString()}");
+    final bool hasFCMToken =
+        await CacheHelper.getData(key: "hasFCMToken") ?? false;
+    log("hasFCMToken: ${hasFCMToken.toString()}");
     final String? token = await CacheHelper.getData(key: "token");
     log("token: ${token.toString()}");
+    if (!hasFCMToken) {
+      final String? fcmToken = Platform.isAndroid
+          ? await _firebaseMessaging.getToken()
+          : await _firebaseMessaging.getAPNSToken();
+      log("fCMToken: ${fcmToken.toString()}");
 
-    if (hasToken == null || !hasToken) {
-      //here we have to send the fcm token
-      await CacheHelper.setBool(key: "hasFCMToken", value: true);
-      await CacheHelper.setString(key: "fcm_token", value: fCMToken!);
+      if (fcmToken != null) {
+        await CacheHelper.setBool(key: "hasFCMToken", value: true);
+        await CacheHelper.setString(key: "fcm_token", value: fcmToken);
+      } else {
+        log("Failed to retrieve FCM token");
+      }
+    } else {
+      final String fcmToken = CacheHelper.getData(key: 'fcm_token');
+      log("fCMToken: ${fcmToken.toString()}");
     }
   }
 
@@ -152,8 +131,6 @@ class FirebaseApi {
   }
 
   Future<void> initNotifications() async {
-    //await _firebaseMessaging.requestPermission();
-    //await saveToken();
     await requestNotificationPermission();
     await initPushNotifications();
     await initLocalNotifications();

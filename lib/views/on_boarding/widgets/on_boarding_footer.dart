@@ -24,7 +24,7 @@ class OnBoardingFooter extends StatelessWidget {
               CustomButton(
                 onTap: () {
                   if (controller.isChecked) {
-                    CacheHelper.setBool(key:'hasFCMToken', value:false);
+                    CacheHelper.setBool(key:'firstTime', value:false);
                     debugPrint('change first use value');
                     Get.offAll(LoginPage());
                   } else {
