@@ -86,7 +86,7 @@ class ArchiveOrderDetailsPage extends StatelessWidget {
                             crossAxisCount: 2,
                             mainAxisSpacing: 16,
                             crossAxisSpacing: 16,
-                            childAspectRatio: 1.8,
+                            childAspectRatio: 0.7,
                           ),
                           itemCount: model.products!.length,
                           itemBuilder: (context, index) {

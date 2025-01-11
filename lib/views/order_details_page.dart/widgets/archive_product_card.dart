@@ -37,7 +37,7 @@ class ArchiveProductCard extends StatelessWidget {
                     maxLines: 2,
                     model.name,
                     style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                         fontFamily: Constans.kFontFamily),
                   ),
@@ -45,7 +45,7 @@ class ArchiveProductCard extends StatelessWidget {
                     companyName,
                     style: const TextStyle(
                         color: Colors.black26,
-                        fontSize: 12,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                         fontFamily: Constans.kFontFamily),
                   ),

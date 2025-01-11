@@ -8,7 +8,10 @@ import 'package:shop_app/views/salesman_app/order_details.dart/widgets/submit_or
 class OrderDetailsFooter extends StatelessWidget {
   const OrderDetailsFooter({
     super.key,
-    this.pendingOrders, this.orderIndex, required this.id, required this.tripId,
+    this.pendingOrders,
+    this.orderIndex,
+    required this.id,
+    required this.tripId,
   });
   final List<TripOrderModel>? pendingOrders;
   final int? orderIndex;
@@ -25,19 +28,19 @@ class OrderDetailsFooter extends StatelessWidget {
           CustomButton(
             onTap: () {
               Get.bottomSheet(SubmitOrderBottomSheet(
-                tripId:tripId,
+                tripId: tripId,
                 id: id,
                 title: 'الرجاء ادخال المبلغ المدفوع من قبل الزبون',
                 label: 'المبلغ',
                 keyboardType: TextInputType.number,
-                buttonText: 'تاكيد الطلب',
+                buttonText: 'تسليم الطلب',
                 callDelivered: true,
               ));
             },
             width: MediaQuery.sizeOf(context).width / 2 - 10,
             padding: EdgeInsets.all(16),
             title: Text(
-              'تاكيد الطلب',
+              'تسليم الطلب',
               style: TextStyle(
                   fontSize: 20,
                   color: Colors.white,
@@ -49,15 +52,14 @@ class OrderDetailsFooter extends StatelessWidget {
           CustomButton(
             onTap: () {
               Get.bottomSheet(SubmitOrderBottomSheet(
-
                 tripId: tripId,
                 id: id,
-                orderIndex:orderIndex,
+                orderIndex: orderIndex,
                 pendingOrders: pendingOrders,
                 title: 'الرجاء ادخال سبب عدم تسليم الطلب',
                 label: 'السبب',
                 keyboardType: TextInputType.text,
-                buttonText: 'تاكيد الطلب',
+                buttonText: 'تجاهل الطلب',
                 callDelivered: false,
               ));
             },
