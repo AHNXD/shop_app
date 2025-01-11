@@ -174,6 +174,32 @@ class AuthController extends GetxController {
     }
   }
 
+  Future<bool> checkToken() async {
+    try {
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${CacheHelper.getData(key: 'token')}'
+      };
+      var request = http.MultipartRequest(
+          'GET', Uri.parse('${Constans.kBaseUrl}check-account'));
+
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      var data = jsonDecode(await response.stream.bytesToString());
+      if (data['success']) {
+        bool state = data['data']['IsActive'] == 0 ? false : true;
+        debugPrint('User state is $state');
+        return state;
+      } else {
+        return false;
+      }
+    } on Exception {
+      return false;
+    }
+  }
+
   void handleLoginResponseStatus(
       http.StreamedResponse response, data, context) async {
     try {

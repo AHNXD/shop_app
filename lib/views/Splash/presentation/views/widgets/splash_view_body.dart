@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shop_app/controllers/auth_controller.dart';
 import 'package:shop_app/helper/cache_helper.dart';
 import 'package:shop_app/main_page.dart';
 import 'package:shop_app/utils/app_images.dart';
@@ -68,16 +69,22 @@ class _SplashViewbodyState extends State<SplashViewbody>
   void navigateToHome() {
     Future.delayed(
       const Duration(seconds: 3),
-      () {
-        CacheHelper.getData(key: 'firstTime') ?? true
-            ? Get.offAll(() => OnBoardingPage())
-            : CacheHelper.getData(key: 'token') == null ||
-                    (CacheHelper.getData(key: "longitude") == null &&
-                        CacheHelper.getData(key: "latitude") == null)
-                ? Get.offAll(() => LoginPage())
-                : CacheHelper.getData(key: 'role') == 'customer'
-                    ? Get.offAll(() => MainPage())
-                    : Get.offAll(() => TripsPage());
+      () async {
+        if (CacheHelper.getData(key: 'firstTime') ?? true) {
+          Get.offAll(() => OnBoardingPage());
+        } else if (CacheHelper.getData(key: 'token') == null ||
+            (CacheHelper.getData(key: "longitude") == null &&
+                CacheHelper.getData(key: "latitude") == null)) {
+          Get.offAll(() => LoginPage());
+        } else {
+          final controller = Get.put(AuthController());
+          bool state = await controller.checkToken();
+          state
+              ? CacheHelper.getData(key: 'role') == 'customer'
+                  ? Get.offAll(() => MainPage())
+                  : Get.offAll(() => TripsPage())
+              : Get.offAll(() => LoginPage());
+        }
       },
     );
   }
