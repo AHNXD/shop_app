@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "1081958068030",
     "project_id": "al-wasit-f0c5c",
-    "storage_bucket": "al-wasit-f0c5c.appspot.com"
+    "storage_bucket": "al-wasit-f0c5c.firebasestorage.app"
   },
   "client": [
     {
@@ -10,6 +10,25 @@
         "mobilesdk_app_id": "1:1081958068030:android:50f8d45acb06fb5d19066f",
         "android_client_info": {
           "package_name": "com.example.shop_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWCe3mBIi54UB7pJAnV9HgHJe7TCNIOFA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1081958068030:android:b76c22f69461f4e219066f",
+        "android_client_info": {
+          "package_name": "com.techtoc.broker"
         }
       },
       "oauth_client": [],
