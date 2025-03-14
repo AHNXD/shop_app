@@ -61,7 +61,7 @@
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.example.shop_app" />
+                <category android:name="com.techtoc.broker" />
             </intent-filter>
         </receiver>
         <!-- Don't delete the meta-data below.
