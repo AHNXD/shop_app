@@ -45,7 +45,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1081958068030',
     projectId: 'al-wasit-f0c5c',
     storageBucket: 'al-wasit-f0c5c.appspot.com',
-    iosBundleId: 'com.example.shopAppAHN',
+    iosBundleId: 'com.techtoc.shopAppAHN',
   );
 
   static const FirebaseOptions web = FirebaseOptions(
@@ -64,7 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1081958068030',
     projectId: 'al-wasit-f0c5c',
     storageBucket: 'al-wasit-f0c5c.appspot.com',
-    iosBundleId: 'com.example.shopApp',
+    iosBundleId: 'com.techtoc.shopApp',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
