@@ -14,6 +14,64 @@ class OnBoardingFooter extends StatelessWidget {
     super.key,
   });
 
+  void _showLocationPermissionDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text("موافقة على تتبع الموقع",
+            style: TextStyle(
+              fontFamily: Constans.kFontFamily,
+              fontWeight: FontWeight.bold,
+              color: Constans.kMainColor,
+              fontSize: 15,
+            )),
+        content: Text(
+            "يجب عليك السماح للتطبيق بتتبع موقعك في الخلفية لضمان أفضل تجربة ومتابعة أداء مندوبي المبيعات.",
+            style: TextStyle(
+              fontFamily: Constans.kFontFamily,
+              fontWeight: FontWeight.bold,
+              fontSize: 10,
+            )),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomButton(
+                onTap: () => Navigator.of(context).pop(),
+                title: Text(
+                  'رفض',
+                  style: TextStyle(
+                    fontFamily: Constans.kFontFamily,
+                    color: Colors.white,
+                    fontSize: 10,
+                  ),
+                ),
+                color: Constans.kMainColor,
+              ),
+              CustomButton(
+                onTap: () {
+                  CacheHelper.setBool(key: 'firstTime', value: false);
+                  debugPrint('الموافقة على تتبع الموقع وتغيير قيمة firstTime');
+                  Get.offAll(LoginPage());
+                },
+                title: Text(
+                  'موافقة',
+                  style: TextStyle(
+                    fontFamily: Constans.kFontFamily,
+                    color: Colors.white,
+                    fontSize: 10,
+                  ),
+                ),
+                color: Constans.kMainColor,
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<OnBoardingController>(
@@ -24,9 +82,7 @@ class OnBoardingFooter extends StatelessWidget {
               CustomButton(
                 onTap: () {
                   if (controller.isChecked) {
-                    CacheHelper.setBool(key:'firstTime', value:false);
-                    debugPrint('change first use value');
-                    Get.offAll(LoginPage());
+                    _showLocationPermissionDialog(context);
                   } else {
                     showInfoSnackBar('حدث خطأ',
                             "عذرا لايمكنك المتابعة بدون الموافقة على سياسة الخصوصية ")
