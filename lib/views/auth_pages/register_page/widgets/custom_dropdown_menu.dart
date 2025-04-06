@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/constans.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // ignore: must_be_immutable
 class CustomDropDown extends StatelessWidget {
@@ -19,13 +20,14 @@ class CustomDropDown extends StatelessWidget {
   final void Function(Object?)? onChanged;
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context);
     //selectedValue = items[0].name;
     drop = items;
     return DropdownButtonFormField(
       padding: const EdgeInsets.all(0),
       dropdownColor: const Color(0xFFF1F7F4),
       style: const TextStyle(
-          fontSize: 16,
+          overflow: TextOverflow.ellipsis,
           height: 1,
           color: Colors.black,
           fontFamily: Constans.kFontFamily),
@@ -39,7 +41,15 @@ class CustomDropDown extends StatelessWidget {
         (e) {
           return DropdownMenuItem(
             value: e.name,
-            child: Text(e.name),
+            child: Text(
+              overflow: TextOverflow.ellipsis,
+              e.name,
+              maxLines: 1, // Limit to one line
+              style: TextStyle(
+                fontSize: 12.sp, // Adjust font size as needed
+                fontFamily: Constans.kFontFamily,
+              ),
+            ),
           );
         },
       ).toList(),
