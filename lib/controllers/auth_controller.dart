@@ -158,7 +158,7 @@ class AuthController extends GetxController {
       var request = http.MultipartRequest(
           'POST', Uri.parse('${Constans.kBaseUrl}auth/login'));
       request.fields.addAll({
-        'contact': phoneNumber,
+        'contact': "${countryCode}${phoneNumber}",
         'password': password,
         'device_token': CacheHelper.getData(key: "fcm_token")
       });

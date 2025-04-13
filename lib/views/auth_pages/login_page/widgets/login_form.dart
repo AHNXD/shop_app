@@ -21,12 +21,49 @@ class _LoginFormState extends State<LoginForm> {
   final controller = Get.put(AuthController());
   bool isLoading = false;
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (!Constans.countryCodes
+        .any((e) => e['code'] == controller.countryCode)) {
+      controller.countryCode = Constans.countryCodes.first['code']!;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Form(
       key: formKey,
       autovalidateMode: autovalidateMode,
       child: Column(
         children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 241, 247, 244),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.transparent),
+            ),
+            child: DropdownButtonFormField<String>(
+              value: controller.countryCode,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+              ),
+              items: Constans.countryCodes.map((country) {
+                return DropdownMenuItem<String>(
+                  value: country['code'],
+                  child: Text('${country['name']} (${country['code']})'),
+                );
+              }).toList(),
+              onChanged: (val) {
+                if (val != null) controller.countryCode = val;
+              },
+              style: const TextStyle(
+                  color: Colors.black, fontFamily: Constans.kFontFamily),
+              icon: const Icon(Icons.arrow_drop_down, color: Color(0xFF1C3132)),
+            ),
+          ),
+          const SizedBox(height: 10),
           CustomTextField(
             onChanged: (val) {
               controller.phoneNumber = val;

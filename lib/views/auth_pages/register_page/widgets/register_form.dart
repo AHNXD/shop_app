@@ -104,60 +104,55 @@ class _RegisterFormState extends State<RegisterForm> {
             const SizedBox(
               height: 15,
             ),
-            Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 241, 247, 244),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.transparent),
-                  ),
-                  child: DropdownButtonFormField<String>(
-                    value: controller.countryCode,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                    ),
-                    items: Constans.countryCodes.map((country) {
-                      return DropdownMenuItem<String>(
-                        value: country['code'],
-                        child: Text('${country['name']} (${country['code']})'),
-                      );
-                    }).toList(),
-                    onChanged: (val) {
-                      if (val != null) controller.countryCode = val;
-                    },
-                    style: const TextStyle(
-                        color: Colors.black, fontFamily: Constans.kFontFamily),
-                    icon: const Icon(Icons.arrow_drop_down,
-                        color: Color(0xFF1C3132)),
-                  ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 241, 247, 244),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.transparent),
+              ),
+              child: DropdownButtonFormField<String>(
+                value: controller.countryCode,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
                 ),
-                const SizedBox(width: 10),
-                CustomTextField(
-                    onChanged: (val) {
-                      controller.phoneNumber = val;
-                    },
-                    isPhoneNumber: true,
-                    textStyle: const TextStyle(color: Colors.black),
-                    cursorColor: Colors.black,
-                    label: "رقم الهاتف",
-                    labelStyle: const TextStyle(
-                        color: Colors.black,
-                        fontFamily: Constans.kFontFamily,
-                        fontWeight: FontWeight.normal),
-                    floatingLabelBehavior: FloatingLabelBehavior.auto,
-                    filled: true,
-                    fillColor: const Color.fromARGB(255, 241, 247, 244),
-                    focusedBorderColor: const Color(0xFF1C3132),
-                    enabledBorderColor: Colors.transparent,
-                    prefixIcon: const Icon(
-                      Icons.phone,
-                      color: Color(0xFF1C3132),
-                    ),
-                    keyboardType: TextInputType.phone),
-              ],
+                items: Constans.countryCodes.map((country) {
+                  return DropdownMenuItem<String>(
+                    value: country['code'],
+                    child: Text('${country['name']} (${country['code']})'),
+                  );
+                }).toList(),
+                onChanged: (val) {
+                  if (val != null) controller.countryCode = val;
+                },
+                style: const TextStyle(
+                    color: Colors.black, fontFamily: Constans.kFontFamily),
+                icon:
+                    const Icon(Icons.arrow_drop_down, color: Color(0xFF1C3132)),
+              ),
             ),
+            CustomTextField(
+                onChanged: (val) {
+                  controller.phoneNumber = val;
+                },
+                isPhoneNumber: true,
+                textStyle: const TextStyle(color: Colors.black),
+                cursorColor: Colors.black,
+                label: "رقم الهاتف",
+                labelStyle: const TextStyle(
+                    color: Colors.black,
+                    fontFamily: Constans.kFontFamily,
+                    fontWeight: FontWeight.normal),
+                floatingLabelBehavior: FloatingLabelBehavior.auto,
+                filled: true,
+                fillColor: const Color.fromARGB(255, 241, 247, 244),
+                focusedBorderColor: const Color(0xFF1C3132),
+                enabledBorderColor: Colors.transparent,
+                prefixIcon: const Icon(
+                  Icons.phone,
+                  color: Color(0xFF1C3132),
+                ),
+                keyboardType: TextInputType.phone),
             const SizedBox(
               height: 15,
             ),
