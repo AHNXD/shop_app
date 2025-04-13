@@ -96,7 +96,7 @@ class AuthController extends GetxController {
   }
 
   String userName = '';
-  String countryCode = '+1';
+  String countryCode = '';
   String phoneNumber = '';
   String password = '';
   String addressId = '';
