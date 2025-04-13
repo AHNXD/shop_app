@@ -96,7 +96,7 @@ class AuthController extends GetxController {
   }
 
   String userName = '';
-  String countryCode = '+1*';
+  String countryCode = '+1';
   String phoneNumber = '';
   String password = '';
   String addressId = '';
@@ -116,7 +116,7 @@ class AuthController extends GetxController {
           'POST', Uri.parse('${Constans.kBaseUrl}auth/register'));
       request.fields.addAll({
         'name': userName,
-        'contact': phoneNumber,
+        'contact': "${countryCode}${phoneNumber}",
         'password': password,
         'address_id': addressId,
         'location_details': locationDetails,

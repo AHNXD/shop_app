@@ -85,10 +85,10 @@ class FormValidators {
         return "حقل اجباري";
       } else if (int.tryParse(value) == null) {
         return "رقم الهاتف يجب ان لايحوي احرف";
-      } else if (value.length != 10) {
-        return "رقم الهاتف يجب ان يكون 10 ارقام";
-      } else if (value.indexOf('09') != 0) {
-        return "رقم الهاتف غير صالح";
+      } else if (value.length != 9) {
+        return "رقم الهاتف يجب ان يكون 9 ارقام";
+        // } else if (value.indexOf('09') != 0) {
+        //   return "رقم الهاتف غير صالح";
       } else {
         return null;
       }
